@@ -1,0 +1,312 @@
+
+:root {
+    --green: #315f4e;
+    --green-dark: #285442;
+    --mint: #a9e7ca;
+    --ink: #26342e;
+    --muted: #738078;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    background: #f8faf8;
+}
+
+/* Estrutura principal */
+
+.signup-shell {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: minmax(340px, .9fr) minmax(530px, 1.1fr);
+}
+
+/* Painel da marca */
+
+.brand-panel {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 2rem;
+    color: #fff;
+    background: linear-gradient(145deg, #2d5d4b, #477e68);
+}
+
+.brand-panel::before,
+.brand-panel::after {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    width: 330px;
+    height: 330px;
+    border: 20px solid rgba(180, 239, 211, .10);
+    border-radius: 48% 4% 48% 4%;
+    transform: rotate(42deg);
+}
+
+.brand-panel::before {
+    top: -215px;
+    right: -145px;
+}
+
+.brand-panel::after {
+    bottom: -230px;
+    left: -175px;
+    width: 390px;
+    height: 390px;
+}
+
+.brand-content {
+    max-width: 500px;
+    text-align: center;
+}
+
+.brand-mark {
+    width: 82px;
+    height: 82px;
+    margin: 0 auto 12px;
+    color: var(--mint);
+}
+
+.brand-name {
+    margin: 0;
+    font-size: clamp(3rem, 5vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -3px;
+    line-height: 1;
+}
+
+.brand-name span {
+    color: var(--mint);
+}
+
+.brand-tagline {
+    margin: 12px 0 0;
+    font-size: 1.08rem;
+}
+
+.brand-divider {
+    width: 76px;
+    height: 2px;
+    margin: 26px auto 18px;
+    background: rgba(169, 231, 202, .45);
+}
+
+.brand-motto {
+    margin: 0;
+    color: #e1f2e9;
+}
+
+.brand-caption {
+    max-width: 350px;
+    margin: 34px auto 0;
+    color: #d3e7dc;
+    font-size: .88rem;
+    line-height: 1.6;
+}
+
+/* Formulário */
+
+.form-panel {
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+}
+
+.signup-card {
+    width: min(100%, 590px);
+    padding: clamp(1.7rem, 3vw, 2.5rem);
+    border: 1px solid #edf0ed;
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: 0 16px 45px rgba(35, 55, 44, .13);
+}
+
+.card-heading {
+    margin: 0;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -.4px;
+}
+
+.card-subheading {
+    margin: 5px 0 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: .9rem;
+}
+
+/* Campos */
+
+.form-label {
+    margin-bottom: 6px;
+    font-size: .83rem;
+    font-weight: 600;
+}
+
+.form-control,
+.form-select {
+    min-height: 45px;
+    border-color: #d9dfdb;
+    border-radius: 9px;
+    font-size: .88rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: #60937b;
+    box-shadow: 0 0 0 .2rem rgba(49, 95, 78, .12);
+}
+
+.form-control::placeholder {
+    color: #a6aea9;
+}
+
+.field-hint {
+    margin-top: 5px;
+    color: var(--muted);
+    font-size: .73rem;
+}
+
+/* Aviso de aprovação */
+
+.access-notice {
+    display: flex;
+    gap: 10px;
+    margin: 19px 0;
+    padding: 12px 14px;
+    border: 1px solid #d8e9de;
+    border-radius: 10px;
+    background: #f1f8f3;
+    color: #436650;
+    font-size: .79rem;
+    line-height: 1.45;
+}
+
+.access-notice svg {
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+    margin-top: 1px;
+}
+
+/* Botão */
+
+.btn-submit {
+    min-height: 47px;
+    border: 0;
+    border-radius: 9px;
+    background: var(--green);
+    font-weight: 600;
+    transition: background .2s ease, transform .2s ease;
+}
+
+.btn-submit:hover,
+.btn-submit:focus {
+    background: var(--green-dark);
+}
+
+.btn-submit:active {
+    transform: scale(.99);
+}
+
+/* Link para login */
+
+.login-prompt {
+    margin: 17px 0 0;
+    text-align: center;
+    color: var(--muted);
+    font-size: .84rem;
+}
+
+.login-prompt a {
+    color: #39785b;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.login-prompt a:hover {
+    text-decoration: underline;
+}
+
+/* Mensagens */
+
+.result-message {
+    margin-bottom: 16px;
+    border-radius: 9px;
+    font-size: .84rem;
+}
+
+/* Responsividade */
+
+@media (max-width: 800px) {
+
+    .signup-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .brand-panel {
+        min-height: 210px;
+        padding: 1.8rem 1.4rem;
+    }
+
+    .brand-mark {
+        width: 52px;
+        height: 52px;
+        margin-bottom: 7px;
+    }
+
+    .brand-name {
+        font-size: 2.7rem;
+    }
+
+    .brand-tagline {
+        margin-top: 7px;
+        font-size: .94rem;
+    }
+
+    .brand-divider,
+    .brand-motto,
+    .brand-caption {
+        display: none;
+    }
+
+    .form-panel {
+        padding: 1.3rem .9rem 2rem;
+    }
+
+    .signup-card {
+        padding: 1.5rem 1.2rem;
+    }
+}
+
+/* Animação */
+
+@media (prefers-reduced-motion: no-preference) {
+
+    .signup-card {
+        animation: arrive .4s ease-out both;
+    }
+
+    @keyframes arrive {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}

@@ -1,0 +1,87 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7f6;
+    color: #263a35;
+}
+
+.dashboard-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 30px;
+}
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 60px;
+}
+
+.dashboard-header h1 {
+    color: #205d4d;
+}
+
+.dashboard-header button {
+    background: #205d4d;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.welcome-section {
+    background: #205d4d;
+    color: white;
+    padding: 45px;
+    border-radius: 16px;
+    margin-bottom: 40px;
+}
+
+.welcome-section h2 {
+    font-size: 30px;
+    margin-bottom: 12px;
+}
+
+.modules-section h3 {
+    margin-bottom: 20px;
+}
+
+.modules-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.module-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #e1e9e5;
+}
+
+.module-card h4 {
+    margin-bottom: 10px;
+    color: #205d4d;
+}
+
+.module-card p {
+    color: #718078;
+}
+
+@media (max-width: 600px) {
+    .modules-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-container {
+        padding: 15px;
+    }
+}

@@ -1,0 +1,408 @@
+
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#315f4e">
+
+    <title>Solicitar cadastro | MedCare</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/cadastro.css}">
+</head>
+
+<body>
+
+<main class="signup-shell">
+
+    <!-- PAINEL DA MARCA -->
+    <section class="brand-panel" aria-label="MedCare">
+
+        <div class="brand-content">
+
+            <svg class="brand-mark" viewBox="0 0 100 100"
+                 fill="none" aria-hidden="true">
+
+                <path
+                        d="M38 10a8 8 0 0 1 8 8v14h14a8 8 0 0 1 0 16H46v14a8 8 0 0 1-16 0V48H16a8 8 0 0 1 0-16h14V18a8 8 0 0 1 8-8Z"
+                        stroke="currentColor" stroke-width="6"/>
+
+                <path
+                        d="M51 82c-2-17 8-35 34-38-3 24-15 38-34 38Z"
+                        fill="currentColor"/>
+
+                <path
+                        d="M43 88c3-13 13-24 30-34"
+                        stroke="#315f4e" stroke-width="3"
+                        stroke-linecap="round"/>
+
+            </svg>
+
+            <h1 class="brand-name">Med<span>Care</span></h1>
+
+            <p class="brand-tagline">
+                Sistema integrado de Gestão Hospitalar
+            </p>
+
+            <div class="brand-divider"></div>
+
+            <p class="brand-motto">
+                Tecnologia para cuidar melhor.
+            </p>
+
+            <p class="brand-caption">
+                Acesso seguro para profissionais e colaboradores
+                autorizados do hospital.
+            </p>
+
+        </div>
+
+    </section>
+
+    <!-- FORMULÁRIO -->
+    <section class="form-panel" aria-label="Solicitação de cadastro">
+
+        <div class="signup-card">
+
+            <h2 class="card-heading">Solicitar cadastro</h2>
+
+            <p class="card-subheading">
+                Preencha seus dados para pedir acesso ao MedCare
+            </p>
+
+            <!-- MENSAGENS -->
+            <div class="alert alert-danger result-message"
+                 role="alert"
+                 th:if="${erro}"
+                 th:text="${erro}">
+            </div>
+
+            <div class="alert alert-danger result-message"
+                 role="alert"
+                 th:if="${#fields.hasErrors('usuario.*')}"
+                 th:text="'Verifique os dados informados e tente novamente.'">
+            </div>
+
+            <div class="alert alert-success result-message"
+                 role="alert"
+                 th:if="${param.cadastroSucesso}">
+                Solicitação enviada com sucesso! Aguarde a aprovação da administração.
+            </div>
+
+            <!-- FORMULÁRIO -->
+            <form th:action="@{/cadastro}"
+                  th:object="${usuario}"
+                  method="post"
+                  id="signupForm">
+
+                <div class="row g-3">
+
+                    <!-- NOME -->
+                    <div class="col-12">
+
+                        <label class="form-label" for="nome">
+                            Nome completo
+                        </label>
+
+                        <input class="form-control"
+                               id="nome"
+                               type="text"
+                               th:field="*{nome}"
+                               placeholder="Digite seu nome completo"
+                               autocomplete="name"
+                               maxlength="120"
+                               required>
+
+                        <div class="text-danger small"
+                             th:errors="*{nome}">
+                        </div>
+
+                    </div>
+
+                    <!-- CPF -->
+                    <div class="col-md-6">
+
+                        <label class="form-label" for="cpf">
+                            CPF
+                        </label>
+
+                        <input class="form-control"
+                               id="cpf"
+                               type="text"
+                               th:field="*{cpf}"
+                               inputmode="numeric"
+                               placeholder="000.000.000-00"
+                               maxlength="14"
+                               autocomplete="off"
+                               required>
+
+                        <div class="field-hint">
+                            Informe seu CPF.
+                        </div>
+
+                        <div class="text-danger small"
+                             th:errors="*{cpf}">
+                        </div>
+
+                    </div>
+
+                    <!-- CARGO -->
+                    <div class="col-md-6">
+
+                        <label class="form-label" for="cargo">
+                            Cargo ou função
+                        </label>
+
+                        <select class="form-select"
+                                id="cargo"
+                                th:field="*{cargo}"
+                                required>
+
+                            <option value="">
+                                Selecione seu perfil
+                            </option>
+
+                            <option value="Recepcionista">Recepcionista</option>
+                            <option value="Medico">Médico</option>
+                            <option value="Enfermeira">Enfermeira</option>
+                            <option value="Radiologista">Radiologista</option>
+                            <option value="Outro profissional">Outro profissional</option>
+
+                        </select>
+
+                        <div class="text-danger small"
+                             th:errors="*{cargo}">
+                        </div>
+
+                    </div>
+
+                    <!-- E-MAIL -->
+                    <div class="col-12">
+
+                        <label class="form-label" for="email">
+                            E-mail profissional
+                        </label>
+
+                        <input class="form-control"
+                               id="email"
+                               type="email"
+                               th:field="*{email}"
+                               placeholder="nome@hospital.com.br"
+                               autocomplete="email"
+                               maxlength="160"
+                               required>
+
+                        <div class="text-danger small"
+                             th:errors="*{email}">
+                        </div>
+
+                    </div>
+
+                    <!-- SENHA -->
+                    <div class="col-md-6">
+
+                        <label class="form-label" for="senha">
+                            Criar senha
+                        </label>
+
+                        <input class="form-control"
+                               id="senha"
+                               type="password"
+                               th:field="*{senha}"
+                               placeholder="Mínimo de 8 caracteres"
+                               autocomplete="new-password"
+                               minlength="8"
+                               required>
+
+                        <div class="field-hint">
+                            Use pelo menos 8 caracteres.
+                        </div>
+
+                        <div class="text-danger small"
+                             th:errors="*{senha}">
+                        </div>
+
+                    </div>
+
+                    <!-- CONFIRMAR SENHA -->
+                    <div class="col-md-6">
+
+                        <label class="form-label" for="confirmarSenha">
+                            Confirmar senha
+                        </label>
+
+                        <input class="form-control"
+                               id="confirmarSenha"
+                               name="confirmarSenha"
+                               type="password"
+                               placeholder="Digite a senha novamente"
+                               autocomplete="new-password"
+                               minlength="8"
+                               required>
+
+                        <div class="text-danger small"
+                             th:if="${erroSenha}"
+                             th:text="${erroSenha}">
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- AVISO DE SEGURANÇA -->
+                <div class="access-notice">
+
+                    <svg viewBox="0 0 24 24"
+                         fill="currentColor"
+                         aria-hidden="true">
+
+                        <path
+                                d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4Zm-1 16-4-4 1.41-1.41L11 14.17l5.59-5.58L18 10l-7 7Z"/>
+
+                    </svg>
+
+                    <span>
+                        O cadastro será enviado para análise.
+                        A conta só poderá ser utilizada após aprovação
+                        da administração do hospital.
+                    </span>
+
+                </div>
+
+                <!-- BOTÃO -->
+                <button class="btn btn-primary btn-submit w-100"
+                        type="submit"
+                        id="submitButton">
+
+                    Enviar solicitação
+
+                </button>
+
+            </form>
+
+            <p class="login-prompt">
+                Já tem uma conta?
+                <a th:href="@{/login}">Voltar para o login</a>
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+<!-- VALIDAÇÕES -->
+<script>
+
+    const cpfInput = document.getElementById('cpf');
+    const form = document.getElementById('signupForm');
+
+    // Máscara de CPF
+    cpfInput.addEventListener('input', () => {
+
+        const digits = cpfInput.value
+            .replace(/\D/g, '')
+            .slice(0, 11);
+
+        cpfInput.value = digits
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d)/, '$1.$2')
+            .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+
+    });
+
+    // Validação matemática do CPF
+    function validarCPF(cpf) {
+
+        cpf = cpf.replace(/\D/g, '');
+
+        if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) {
+            return false;
+        }
+
+        let soma = 0;
+
+        for (let i = 0; i < 9; i++) {
+            soma += Number(cpf.charAt(i)) * (10 - i);
+        }
+
+        let resto = (soma * 10) % 11;
+
+        if (resto === 10) resto = 0;
+
+        if (resto !== Number(cpf.charAt(9))) {
+            return false;
+        }
+
+        soma = 0;
+
+        for (let i = 0; i < 10; i++) {
+            soma += Number(cpf.charAt(i)) * (11 - i);
+        }
+
+        resto = (soma * 10) % 11;
+
+        if (resto === 10) resto = 0;
+
+        return resto === Number(cpf.charAt(10));
+    }
+
+    // Confirmação e validação antes do envio
+    form.addEventListener('submit', (event) => {
+
+        const password = document.getElementById('senha');
+        const confirm = document.getElementById('confirmarSenha');
+
+        cpfInput.setCustomValidity('');
+
+        if (!validarCPF(cpfInput.value)) {
+
+            event.preventDefault();
+
+            cpfInput.setCustomValidity('Informe um CPF válido.');
+            cpfInput.reportValidity();
+
+            return;
+        }
+
+        if (password.value !== confirm.value) {
+
+            event.preventDefault();
+
+            confirm.setCustomValidity('As senhas não conferem.');
+            confirm.reportValidity();
+
+            return;
+        }
+
+        // Envia o CPF somente com números
+        cpfInput.value = cpfInput.value.replace(/\D/g, '');
+
+    });
+
+    // Limpa os erros ao editar os campos
+    cpfInput.addEventListener('input', () => {
+        cpfInput.setCustomValidity('');
+    });
+
+    document.getElementById('confirmarSenha')
+        .addEventListener('input', (event) => {
+
+            event.currentTarget.setCustomValidity('');
+
+        });
+
+</script>
+
+</body>
+</html>
