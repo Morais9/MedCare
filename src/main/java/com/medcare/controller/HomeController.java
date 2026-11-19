@@ -24,9 +24,19 @@ public class HomeController {
         this.usuarioRepository = usuarioRepository;
     }
 
-    @GetMapping("/")
-    public String home(Model model) {
+    @GetMapping({"/", "/index", "/login"})
+    public String login(
+            Model model,
+            @RequestParam(value = "aguardandoAprovacao", required = false)
+            String aguardandoAprovacao) {
+
         model.addAttribute("usuario", new Usuario());
+
+        model.addAttribute(
+                "aguardandoAprovacao",
+                aguardandoAprovacao != null
+        );
+
         return "index";
     }
 
@@ -60,15 +70,10 @@ public class HomeController {
         return "dashboard";
     }
 
-    @GetMapping("/login")
-    public String login() {
-        return "login";
-    }
-
     @GetMapping("/cadastro")
     public String cadastro(Model model) {
         model.addAttribute("usuario", new Usuario());
-        return "index";
+        return "cadastro";
     }
 
     @PostMapping("/cadastro")
@@ -79,12 +84,45 @@ public class HomeController {
 
         try {
             usuarioService.cadastrar(usuario, confirmarSenha);
-            return "redirect:/login?cadastroSucesso=true";
+            return "redirect:/index?cadastroSucesso=true";
 
         } catch (IllegalArgumentException e) {
             model.addAttribute("erro", e.getMessage());
             model.addAttribute("usuario", usuario);
-            return "index";
+            return "cadastro";
         }
+    }
+
+    @GetMapping("/agendamentos")
+    public String agendamentos(
+            Authentication authentication,
+            Model model) {
+
+        Usuario usuario = usuarioRepository
+                .findByEmail(authentication.getName())
+                .orElseThrow(() ->
+                        new IllegalStateException("Usuário não encontrado."));
+
+        // Disponibiliza o usuário completo para o Thymeleaf
+        model.addAttribute("usuarioLogado", usuario);
+
+        model.addAttribute("nomeUsuario", usuario.getNome());
+        model.addAttribute("cargoUsuario", usuario.getCargo());
+
+        // Gera as iniciais do usuário
+        String nome = usuario.getNome() == null
+                ? "U"
+                : usuario.getNome().trim();
+
+        String[] nomes = nome.split("\\s+");
+
+        String iniciais = nomes.length > 1
+                ? nomes[0].substring(0, 1)
+                + nomes[nomes.length - 1].substring(0, 1)
+                : nome.substring(0, 1);
+
+        model.addAttribute("iniciaisUsuario", iniciais.toUpperCase());
+
+        return "agendamentos";
     }
 }

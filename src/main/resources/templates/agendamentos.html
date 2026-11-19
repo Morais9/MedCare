@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendamentos | MedCare</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/dashboard-pacientes.css}">
+  <link rel="stylesheet" th:href="@{/css/agendamentos.css}" href="/css/agendamentos.css">
+</head>
+<body>
+  <div class="app">
+
+    <!-- MENU LATERAL COMPARTILHADO COM AS DEMAIS TELAS -->
+    <aside class="sidebar">
+      <a class="brand" th:href="@{/dashboard}">
+        <span class="brand-icon">+</span>
+        <span>Med<span class="brand-highlight">Care</span></span>
+      </a>
+
+      <div class="menu-label">MENU PRINCIPAL</div>
+      <nav class="sidebar-nav">
+        <a class="nav-item" th:href="@{/dashboard}">
+          <span class="nav-icon">♙</span><span>Pacientes</span>
+        </a>
+        <a class="nav-item active" th:href="@{/agendamentos}">
+          <span class="nav-icon">▦</span><span>Agendamentos</span>
+        </a>
+        <a class="nav-item" href="#module-notice">
+          <span class="nav-icon">⚕</span><span>Consultas</span>
+        </a>
+        <a class="nav-item" href="#module-notice">
+          <span class="nav-icon">▤</span><span>Exames</span>
+        </a>
+        <a class="nav-item" href="#module-notice">
+          <span class="nav-icon">⚙</span><span>Administração</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-user">
+          <div class="avatar" th:text="${iniciaisUsuario}">US</div>
+          <div class="sidebar-user-info">
+            <strong th:text="${nomeUsuario}">Usuário</strong>
+            <span th:text="${cargoUsuario}">Profissional</span>
+          </div>
+        </div>
+        <form th:action="@{/logout}" method="post">
+          <button class="logout-button" type="submit">
+            <span class="nav-icon">⇥</span>Sair do sistema
+          </button>
+        </form>
+      </div>
+    </aside>
+
+    <div class="main-panel">
+      <header class="topbar">
+        <div class="breadcrumb">
+          <span>MedCare</span><span class="breadcrumb-separator">/</span>
+          <strong>Agendamentos</strong>
+        </div>
+        <div class="topbar-actions">
+          <details class="dropdown">
+            <summary class="notification-button" aria-label="Notificações">♧<span class="notification-dot"></span></summary>
+            <div class="dropdown-panel notification-panel">
+              <h3>Notificações</h3>
+              <div class="notification-item">
+                <span class="notification-indicator"></span>
+                <div><strong>Bem-vindo ao MedCare</strong><p>Seu acesso ao sistema foi realizado.</p><small>Notificação do sistema</small></div>
+              </div>
+              <div class="dropdown-footer">Nenhuma outra notificação disponível.</div>
+            </div>
+          </details>
+          <span class="topbar-divider"></span>
+          <details class="dropdown">
+            <summary class="profile-button">
+              <div class="avatar" th:text="${iniciaisUsuario}">US</div>
+              <div class="profile-summary">
+                <strong th:text="${nomeUsuario}">Usuário</strong>
+                <span th:text="${cargoUsuario}">Profissional</span>
+              </div>
+              <span class="profile-arrow">⌄</span>
+            </summary>
+            <div class="dropdown-panel profile-panel">
+              <div class="profile-dropdown-heading">
+                <strong th:text="${nomeUsuario}">Usuário</strong>
+                <span th:text="${cargoUsuario}">Profissional</span>
+              </div>
+              <div class="dropdown-link"><span>✉</span><span th:text="${usuarioLogado.email}">email@medcare.com</span></div>
+              <form th:action="@{/logout}" method="post">
+                <button class="dropdown-logout" type="submit">Sair da conta</button>
+              </form>
+            </div>
+          </details>
+        </div>
+      </header>
+
+      <main class="dashboard-content" id="agendamentos">
+        <div class="conteudo">
+
+        <!-- Título da página -->
+        <div class="titulo-pagina">
+          <svg class="icone-usuario-grande" width="48" height="50" viewBox="0 0 48 50" aria-hidden="true">
+            <circle cx="23" cy="14" r="10" fill="#1A4D33"/>
+            <path d="M4 46 C4 31 42 31 42 46 Z" fill="#1A4D33"/>
+          </svg>
+          <div class="textos-titulo">
+            <h1 id="lblTituloPagina">Agendamentos</h1>
+            <p>Gerencie os agendamentos de consultas e exames.</p>
+          </div>
+        </div>
+
+        <div class="corpo">
+
+          <!-- =================================================
+               4. CARD CENTRAL (ABAS + FILTROS + TABELA + PAGINAÇÃO)
+               ================================================= -->
+          <section class="card-tabela">
+            <div class="abas" id="abas">
+              <div class="aba ativa" data-aba="Agendamentos">Agendamentos</div>
+              <div class="aba" data-aba="Triagem">Triagem</div>
+              <div class="aba" data-aba="Consultas">Consultas</div>
+              <div class="aba" data-aba="Exames">Exames</div>
+            </div>
+
+            <div class="filtros">
+              <div class="busca">
+                <span class="busca-lupa">🔍</span>
+                <input id="txtBusca" type="text" placeholder="Buscar por paciente, CPF ou médico" autocomplete="off">
+              </div>
+
+              <div class="combos">
+                <div id="cmbHoje" class="campo-combo largura-periodo">
+                  <img id="icoCalendario" th:src="@{/images/calendario.png}" src="/images/calendario.png" width="16" height="16" alt="">
+                  <span id="cmbHojeTexto" class="combo-texto">Hoje    ⌄</span>
+                </div>
+                <div id="cmbEspecialidades" class="campo-combo largura-185">
+                  <span id="cmbEspTexto" class="combo-texto">🩺 Todas especialidades  ⌄</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="tabela-scroll">
+              <table id="tabela">
+                <colgroup>
+                  <col style="width:10%">
+                  <col style="width:28%">
+                  <col style="width:18%">
+                  <col style="width:22%">
+                  <col style="width:22%">
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th data-col="0">Horário</th>
+                    <th data-col="1">Paciente</th>
+                    <th data-col="2">Especialidade</th>
+                    <th data-col="3">Médico</th>
+                    <th data-col="4">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="corpoTabela"></tbody>
+              </table>
+            </div>
+
+            <div class="rodape-tabela">
+              <span id="lblContagem" class="contagem">Mostrando 4 de 4 agendamentos</span>
+              <div class="paginacao" id="paginacao">
+                <div class="pag-btn" data-nav="-1">&lt;</div>
+                <div class="pag-btn ativo" data-pag="1">1</div>
+                <div class="pag-btn" data-pag="2">2</div>
+                <div class="pag-btn" data-pag="3">3</div>
+                <div class="pag-btn" data-pag="4">4</div>
+                <div class="pag-btn" data-nav="1">&gt;</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- =================================================
+               5. COLUNA DIREITA (NOVO AGENDAMENTO + CALENDÁRIO)
+               ================================================= -->
+          <aside class="coluna-direita">
+
+            <section class="card-novo">
+              <div class="card-novo-header">
+                <span class="card-novo-titulo">⊕  Novo Agendamento</span>
+                <span class="card-novo-seta">›</span>
+              </div>
+
+              <div class="form">
+                <label class="label-form">Paciente</label>
+                <div class="campo-verde">
+                  <input id="inputPaciente" class="input-paciente" type="text" placeholder="Buscar paciente..." autocomplete="off">
+                  <span id="lupaPaciente" class="icone-campo lupa-campo" title="Selecionar paciente cadastrado">🔍</span>
+                </div>
+
+                <label class="label-form">Especialidade</label>
+                <div id="boxEspecialidade" class="campo-verde seletor">
+                  <span id="lblValorEspecialidade" class="valor">Selecionar especialidade</span>
+                  <span class="icone-campo">⌄</span>
+                </div>
+
+                <label class="label-form">Médico</label>
+                <div id="boxMedico" class="campo-verde seletor">
+                  <span id="lblValorMedico" class="valor">Selecione o médico</span>
+                  <span class="icone-campo">⌄</span>
+                </div>
+
+                <div class="linha-data-hora">
+                  <div>
+                    <label class="label-form">Data</label>
+                    <div id="boxData" class="campo-verde seletor sem-margem">
+                      <span id="lblValorData" class="valor">dd/mm/aaaa</span>
+                      <span class="icone-campo">⌄</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label class="label-form">Horário</label>
+                    <div id="boxHorario" class="campo-verde seletor sem-margem">
+                      <span id="lblValorHorario" class="valor">🕒 Selecione Horário</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div id="btnAgendar" class="btn-agendar" role="button">📅 Agendar</div>
+              </div>
+            </section>
+
+            <section class="card-calendario">
+              <div class="cal-topo">
+                <span id="lblMesAnoCal" class="cal-titulo">Outubro de 2026</span>
+                <div class="cal-setas">
+                  <span id="calAnterior" class="cal-seta">‹</span>
+                  <span id="calProximo" class="cal-seta">›</span>
+                </div>
+              </div>
+              <div id="gradeDiasCal" class="cal-grade"></div>
+            </section>
+
+          </aside>
+        </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script>
+/* =========================================================================
+   MedCare - Agendamentos
+   Lógica portada do código Java Swing (listeners, filtros, calendário...)
+   ========================================================================= */
+(function () {
+  'use strict';
+
+  // ---------------------------------------------------------------------
+  // Utilitários
+  // ---------------------------------------------------------------------
+  const $ = (id) => document.getElementById(id);
+
+  function el(tag, classe, texto) {
+    const e = document.createElement(tag);
+    if (classe) e.className = classe;
+    if (texto !== undefined) e.textContent = texto;
+    return e;
+  }
+
+  // ---------------------------------------------------------------------
+  // Estado (mesmas variáveis da classe Java)
+  // ---------------------------------------------------------------------
+  let filtroEspecialidadeAtual = 'Todas especialidades';
+  let filtroPeriodoAtual = 'Hoje'; // guardado, igual ao Java (não filtra a tabela)
+  let abaAtiva = 'Agendamentos';
+
+  let valorEspecialidade = '';
+  let valorMedico = '';
+  let valorData = '05/10/2026';
+  let valorHorario = '';
+
+  let mesAnoAtual = { ano: 2026, mes: 10 }; // mes: 1..12
+  let diaSelecionadoCal = 5;
+  let paginaAtual = 1;
+
+  let proximoId = 1;
+  let selecionadoId = null;
+  const ordenacao = { col: -1, asc: true };
+
+  const STATUS_OPCOES = ['Em Atendimento', 'Confirmado', 'Aguardando', 'Reagendado'];
+  const ESPECIALIDADES = ['Clínico Geral', 'Radiologista', 'Enfermeiro', 'Cardiologista', 'Pediatra'];
+  const MEDICOS = ['Dr. Carlos Almeida', 'Dr. Victor Morais', 'Dr. José Peixoto', 'Dra. Ana Beatriz'];
+  const HORARIOS = ['08:00', '08:30', '09:00', '09:40', '10:15', '11:00', '14:00', '14:30', '15:30', '16:30'];
+  const PACIENTES_SUGERIDOS = [
+    'João Da Silva Pereira',
+    'Maria Rebeca De Jesus',
+    'Fernando Rodrigues',
+    'Larissa Melo Aragão',
+    'Carlos Eduardo Santos'
+  ];
+  const MESES = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+
+  const dados = [
+    { horario: '08:20', nome: 'João Da Silva Pereira', cpf: 'CPF: 123.456.789-00', especialidade: 'Clínico Geral', medico: 'Dr. Carlos Almeida', status: 'Em Atendimento' },
+    { horario: '09:40', nome: 'Maria Rebeca De Jesus', cpf: 'CPF: 314.785.634-22', especialidade: 'Radiologista', medico: 'Dr. Victor Morais', status: 'Confirmado' },
+    { horario: '10:05', nome: 'Fernando Rodrigues', cpf: 'CPF: 254.874.162-67', especialidade: 'Clínico Geral', medico: 'Dr. Carlos Almeida', status: 'Aguardando' },
+    { horario: '14:30', nome: 'Larissa Melo Aragão', cpf: 'CPF: 684.258.471-03', especialidade: 'Enfermeiro', medico: 'Dr. José Peixoto', status: 'Reagendado' }
+  ].map((r) => Object.assign({ id: proximoId++ }, r));
+
+  const COLUNAS = [
+    (r) => r.horario,
+    (r) => r.nome,
+    (r) => r.especialidade,
+    (r) => r.medico,
+    (r) => r.status
+  ];
+
+  // ---------------------------------------------------------------------
+  // Referências do DOM
+  // ---------------------------------------------------------------------
+  const corpoTabela = $('corpoTabela');
+  const lblContagem = $('lblContagem');
+  const lblTituloPagina = $('lblTituloPagina');
+  const txtBusca = $('txtBusca');
+  const inputPaciente = $('inputPaciente');
+  const lblValorEspecialidade = $('lblValorEspecialidade');
+  const lblValorMedico = $('lblValorMedico');
+  const lblValorData = $('lblValorData');
+  const lblValorHorario = $('lblValorHorario');
+  const lblMesAnoCal = $('lblMesAnoCal');
+  const gradeDiasCal = $('gradeDiasCal');
+
+  // ---------------------------------------------------------------------
+  // Menu popup (equivalente ao JPopupMenu)
+  // ---------------------------------------------------------------------
+  let menuAberto = null;
+
+  function fecharMenu() {
+    if (menuAberto) {
+      menuAberto.remove();
+      menuAberto = null;
+    }
+    document.removeEventListener('mousedown', aoClicarFora, true);
+    document.removeEventListener('keydown', aoTeclarMenu, true);
+    window.removeEventListener('resize', fecharMenu);
+  }
+
+  function aoClicarFora(e) {
+    if (menuAberto && !menuAberto.contains(e.target)) fecharMenu();
+  }
+
+  function aoTeclarMenu(e) {
+    if (e.key === 'Escape') fecharMenu();
+  }
+
+  function abrirMenu(x, y, itens) {
+    fecharMenu();
+    const menu = el('div', 'popup-menu');
+    itens.forEach((item) => {
+      const linha = el('div', 'popup-item', item.texto);
+      linha.addEventListener('click', () => {
+        fecharMenu();
+        if (item.acao) item.acao();
+      });
+      menu.appendChild(linha);
+    });
+    document.body.appendChild(menu);
+
+    const w = menu.offsetWidth;
+    const h = menu.offsetHeight;
+    menu.style.left = Math.max(0, Math.min(x, window.innerWidth - w - 4)) + 'px';
+    menu.style.top = Math.max(0, Math.min(y, window.innerHeight - h - 4)) + 'px';
+    menuAberto = menu;
+
+    // registra depois do clique atual para ele não fechar o menu na hora
+    setTimeout(() => {
+      if (menuAberto !== menu) return;
+      document.addEventListener('mousedown', aoClicarFora, true);
+      document.addEventListener('keydown', aoTeclarMenu, true);
+      window.addEventListener('resize', fecharMenu);
+    }, 0);
+  }
+
+  function abrirMenuAbaixo(elemento, itens, dx, dy) {
+    const r = elemento.getBoundingClientRect();
+    abrirMenu(r.left + (dx || 0), r.bottom + (dy || 0), itens);
+  }
+
+  // ---------------------------------------------------------------------
+  // Diálogos (equivalente ao JOptionPane)
+  // ---------------------------------------------------------------------
+  function dialogo(opcoes) {
+    const { titulo, mensagem, tipo, botoes, comInput, valorInicial } = opcoes;
+    return new Promise((resolve) => {
+      const overlay = el('div', 'dialogo-overlay');
+      const caixa = el('div', 'dialogo');
+      caixa.setAttribute('role', 'dialog');
+      caixa.setAttribute('aria-modal', 'true');
+
+      const barra = el('div', 'dialogo-titulo', titulo);
+      const corpo = el('div', 'dialogo-corpo');
+      const simbolos = { info: 'i', aviso: '!', pergunta: '?' };
+      const icone = el('div', 'dialogo-icone ' + tipo, simbolos[tipo]);
+      const conteudo = el('div', 'dialogo-conteudo');
+      conteudo.appendChild(el('div', 'dialogo-msg', mensagem));
+
+      let campo = null;
+      if (comInput) {
+        campo = el('input', 'dialogo-input');
+        campo.type = 'text';
+        campo.value = valorInicial || '';
+        conteudo.appendChild(campo);
+      }
+      corpo.append(icone, conteudo);
+
+      const rodape = el('div', 'dialogo-botoes');
+      let primeiroBotao = null;
+
+      function fechar(indice) {
+        document.removeEventListener('keydown', aoTeclar, true);
+        overlay.remove();
+        resolve({ indice: indice, texto: campo ? campo.value : '' });
+      }
+
+      function aoTeclar(e) {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          fechar(-1);
+        } else if (e.key === 'Enter') {
+          // se o foco já está num botão, o próprio clique nativo resolve
+          if (document.activeElement && document.activeElement.tagName === 'BUTTON') return;
+          e.preventDefault();
+          fechar(0);
+        }
+      }
+
+      botoes.forEach((rotulo, i) => {
+        const b = el('button', 'dialogo-btn' + (i === 0 ? ' principal' : ''), rotulo);
+        b.type = 'button';
+        b.addEventListener('click', () => fechar(i));
+        if (i === 0) primeiroBotao = b;
+        rodape.appendChild(b);
+      });
+
+      caixa.append(barra, corpo, rodape);
+      overlay.appendChild(caixa);
+      document.body.appendChild(overlay);
+      document.addEventListener('keydown', aoTeclar, true);
+
+      if (campo) {
+        campo.focus();
+        campo.select();
+      } else if (primeiroBotao) {
+        primeiroBotao.focus();
+      }
+    });
+  }
+
+  function mostrarMensagem(titulo, mensagem, tipo) {
+    return dialogo({ titulo: titulo, mensagem: mensagem, tipo: tipo || 'info', botoes: ['OK'] });
+  }
+
+  function confirmar(titulo, mensagem) {
+    return dialogo({ titulo: titulo, mensagem: mensagem, tipo: 'pergunta', botoes: ['Sim', 'Não'] })
+      .then((r) => r.indice === 0);
+  }
+
+  function pedirTexto(mensagem, valorInicial) {
+    return dialogo({
+      titulo: 'Entrada',
+      mensagem: mensagem,
+      tipo: 'pergunta',
+      botoes: ['OK', 'Cancelar'],
+      comInput: true,
+      valorInicial: valorInicial
+    }).then((r) => (r.indice === 0 ? r.texto : null));
+  }
+
+  // ---------------------------------------------------------------------
+  // Logo e ícone PNG com plano B (caso a imagem não exista na pasta IMG)
+  // ---------------------------------------------------------------------
+  function comFallback(img, fn) {
+    if (!img) return;
+    if (img.complete && img.naturalWidth === 0) fn();
+    else img.addEventListener('error', fn, { once: true });
+  }
+
+  const LOGO_SVG =
+    '<svg width="60" height="52" viewBox="0 0 60 52" aria-label="MedCare">' +
+    '<path d="M27 7H33A4 4 0 0 1 37 11V19H45A4 4 0 0 1 49 23V29A4 4 0 0 1 45 33H37V41A4 4 0 0 1 33 45H27A4 4 0 0 1 23 41V33H15A4 4 0 0 1 11 29V23A4 4 0 0 1 15 19H23V11A4 4 0 0 1 27 7Z" ' +
+    'fill="none" stroke="#91CDA8" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>' +
+    '<path d="M26 38C26 24 42 21 51 24C45 38 34 41 26 38Z" fill="#2D6048" stroke="#fff" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>' +
+    '<path d="M28 37Q36 30 45 27" fill="none" stroke="#91CDA8" stroke-width="1.8" stroke-linecap="round"/>' +
+    '</svg>';
+
+  comFallback($('logoImg'), () => {
+    const img = $('logoImg');
+    if (!img) return;
+    const wrapper = el('div');
+    wrapper.innerHTML = LOGO_SVG; // conteúdo estático, sem dados de usuário
+    img.replaceWith(wrapper.firstChild);
+  });
+
+  comFallback($('icoCalendario'), () => {
+    const img = $('icoCalendario');
+    if (img) img.replaceWith(el('span', null, '📅'));
+  });
+
+  // ---------------------------------------------------------------------
+  // 4. Tabela: abas, filtros, ordenação, renderização, paginação
+  // ---------------------------------------------------------------------
+  function passaFiltros(r) {
+    const termo = txtBusca.value.trim().toLowerCase();
+    if (termo) {
+      const bate =
+        r.nome.toLowerCase().includes(termo) ||
+        r.cpf.toLowerCase().includes(termo) ||
+        r.especialidade.toLowerCase().includes(termo) ||
+        r.medico.toLowerCase().includes(termo);
+      if (!bate) return false;
+    }
+
+    if (filtroEspecialidadeAtual !== 'Todas especialidades' &&
+        !r.especialidade.toLowerCase().includes(filtroEspecialidadeAtual.toLowerCase())) {
+      return false;
+    }
+
+    if (abaAtiva === 'Triagem') {
+      if (!r.status.includes('Aguardando')) return false;
+    } else if (abaAtiva === 'Consultas') {
+      if (!['Clínico Geral', 'Cardiologista', 'Pediatra'].some((x) => r.especialidade.includes(x))) return false;
+    } else if (abaAtiva === 'Exames') {
+      if (!['Radiologista', 'Enfermeiro'].some((x) => r.especialidade.includes(x))) return false;
+    }
+    return true;
+  }
+
+  function classeStatus(status) {
+    switch (status) {
+      case 'Em Atendimento': return 'st-atendimento';
+      case 'Confirmado':     return 'st-confirmado';
+      case 'Aguardando':     return 'st-aguardando';
+      default:               return 'st-reagendado';
+    }
+  }
+
+  function render() {
+    let linhas = dados.filter(passaFiltros);
+
+    if (ordenacao.col >= 0) {
+      const get = COLUNAS[ordenacao.col];
+      linhas = linhas.slice().sort((a, b) => {
+        const r = String(get(a)).localeCompare(String(get(b)), 'pt-BR');
+        return ordenacao.asc ? r : -r;
+      });
+    }
+
+    corpoTabela.innerHTML = '';
+    linhas.forEach((r) => {
+      const tr = document.createElement('tr');
+      tr.dataset.id = String(r.id);
+      if (r.id === selecionadoId) tr.classList.add('selecionada');
+
+      const tdHorario = el('td', null, r.horario);
+
+      const tdPaciente = el('td', 'col-paciente');
+      tdPaciente.append(el('div', 'paciente-nome', r.nome), el('div', 'paciente-cpf', r.cpf));
+
+      const tdEsp = el('td', null, r.especialidade);
+      const tdMed = el('td', null, r.medico);
+
+      const tdStatus = el('td', 'col-status');
+      tdStatus.appendChild(el('span', 'badge ' + classeStatus(r.status), r.status));
+
+      tr.append(tdHorario, tdPaciente, tdEsp, tdMed, tdStatus);
+      corpoTabela.appendChild(tr);
+    });
+
+    lblContagem.textContent = 'Mostrando ' + linhas.length + ' de ' + dados.length + ' agendamentos';
+  }
+
+  // Clique na linha: seleciona; na coluna Status (ou duplo clique) abre o menu de status
+  corpoTabela.addEventListener('click', (e) => {
+    const tr = e.target.closest('tr');
+    if (!tr) return;
+    const id = Number(tr.dataset.id);
+
+    selecionadoId = id;
+    corpoTabela.querySelectorAll('tr.selecionada').forEach((x) => x.classList.remove('selecionada'));
+    tr.classList.add('selecionada');
+
+    const td = e.target.closest('td');
+    const col = td ? td.cellIndex : -1;
+    if (col === 4 || e.detail === 2) {
+      abrirMenu(e.clientX, e.clientY, STATUS_OPCOES.map((st) => ({
+        texto: 'Alterar status para: ' + st,
+        acao: () => {
+          const linha = dados.find((x) => x.id === id);
+          if (linha) {
+            linha.status = st;
+            render();
+          }
+        }
+      })));
+    }
+  });
+
+  // Clique no cabeçalho ordena (crescente -> decrescente -> sem ordem), como o TableRowSorter
+  document.querySelectorAll('#tabela thead th').forEach((th) => {
+    th.addEventListener('click', () => {
+      const col = Number(th.dataset.col);
+      if (ordenacao.col !== col) {
+        ordenacao.col = col;
+        ordenacao.asc = true;
+      } else if (ordenacao.asc) {
+        ordenacao.asc = false;
+      } else {
+        ordenacao.col = -1;
+        ordenacao.asc = true;
+      }
+      render();
+    });
+  });
+
+  // Abas
+  $('abas').addEventListener('click', (e) => {
+    const aba = e.target.closest('.aba');
+    if (!aba) return;
+    abaAtiva = aba.dataset.aba;
+    document.querySelectorAll('#abas .aba').forEach((a) => a.classList.toggle('ativa', a === aba));
+    render();
+  });
+
+  // Busca
+  txtBusca.addEventListener('input', render);
+
+  // Combo "Hoje"
+  $('cmbHoje').addEventListener('click', () => {
+    abrirMenuAbaixo($('cmbHoje'), ['Hoje', 'Amanhã', 'Esta Semana', 'Todos'].map((op) => ({
+      texto: op,
+      acao: () => {
+        filtroPeriodoAtual = op;
+        $('cmbHojeTexto').textContent = op + '  ⌄';
+        render();
+      }
+    })));
+  });
+
+  // Combo de especialidades
+  $('cmbEspecialidades').addEventListener('click', () => {
+    const opcoes = ['Todas especialidades', 'Clínico Geral', 'Radiologista', 'Enfermeiro', 'Cardiologista', 'Pediatra'];
+    abrirMenuAbaixo($('cmbEspecialidades'), opcoes.map((op) => ({
+      texto: op,
+      acao: () => {
+        filtroEspecialidadeAtual = op;
+        $('cmbEspTexto').textContent = '🩺 ' + op + '  ⌄';
+        render();
+      }
+    })));
+  });
+
+  // Paginação (só muda o estado visual, como no Java)
+  function selecionarPagina(nova) {
+    paginaAtual = nova;
+    document.querySelectorAll('#paginacao .pag-btn[data-pag]').forEach((b) => {
+      b.classList.toggle('ativo', Number(b.dataset.pag) === paginaAtual);
+    });
+  }
+
+  $('paginacao').addEventListener('click', (e) => {
+    const btn = e.target.closest('.pag-btn');
+    if (!btn) return;
+    if (btn.dataset.pag) {
+      selecionarPagina(Number(btn.dataset.pag));
+    } else if (btn.dataset.nav) {
+      const nova = Math.max(1, Math.min(4, paginaAtual + Number(btn.dataset.nav)));
+      selecionarPagina(nova);
+    }
+  });
+
+  // ---------------------------------------------------------------------
+  // 5. Formulário "Novo Agendamento"
+  // ---------------------------------------------------------------------
+  function definirValor(label, texto, preenchido) {
+    label.textContent = texto;
+    label.classList.toggle('preenchido', !!preenchido);
+  }
+
+  $('lupaPaciente').addEventListener('click', () => {
+    abrirMenuAbaixo($('lupaPaciente').parentElement, PACIENTES_SUGERIDOS.map((p) => ({
+      texto: p,
+      acao: () => { inputPaciente.value = p; }
+    })));
+  });
+
+  $('boxEspecialidade').addEventListener('click', () => {
+    abrirMenuAbaixo($('boxEspecialidade'), ESPECIALIDADES.map((esp) => ({
+      texto: esp,
+      acao: () => {
+        valorEspecialidade = esp;
+        definirValor(lblValorEspecialidade, esp, true);
+      }
+    })));
+  });
+
+  $('boxMedico').addEventListener('click', () => {
+    abrirMenuAbaixo($('boxMedico'), MEDICOS.map((med) => ({
+      texto: med,
+      acao: () => {
+        valorMedico = med;
+        definirValor(lblValorMedico, med, true);
+      }
+    })));
+  });
+
+  $('boxData').addEventListener('click', () => {
+    pedirTexto('Informe a data do agendamento (dd/mm/aaaa):', valorData || '05/10/2026').then((informada) => {
+      if (informada !== null && informada.trim() !== '') {
+        valorData = informada.trim();
+        definirValor(lblValorData, valorData, true);
+      }
+    });
+  });
+
+  $('boxHorario').addEventListener('click', () => {
+    abrirMenuAbaixo($('boxHorario'), HORARIOS.map((h) => ({
+      texto: h,
+      acao: () => {
+        valorHorario = h;
+        definirValor(lblValorHorario, '🕒 ' + h, true);
+      }
+    })));
+  });
+
+  function executarNovoAgendamento() {
+    const nomePac = inputPaciente.value.trim();
+    if (nomePac === '') {
+      mostrarMensagem('Atenção', 'Por favor, digite ou selecione o nome do paciente.', 'aviso')
+        .then(() => inputPaciente.focus());
+      return;
+    }
+
+    const esp = valorEspecialidade === '' ? 'Clínico Geral' : valorEspecialidade;
+    const med = valorMedico === '' ? 'Dr. Carlos Almeida' : valorMedico;
+    const hor = valorHorario === '' ? '11:30' : valorHorario;
+
+    dados.push({
+      id: proximoId++,
+      horario: hor,
+      nome: nomePac,
+      cpf: 'CPF: 492.817.305-11',
+      especialidade: esp,
+      medico: med,
+      status: 'Confirmado'
+    });
+    render();
+
+    // Limpa o formulário
+    inputPaciente.value = '';
+    valorEspecialidade = '';
+    definirValor(lblValorEspecialidade, 'Selecionar especialidade', false);
+    valorMedico = '';
+    definirValor(lblValorMedico, 'Selecione o médico', false);
+    valorHorario = '';
+    definirValor(lblValorHorario, '🕒 Selecione Horário', false);
+
+    mostrarMensagem(
+      'Agendamento Confirmado',
+      'Agendamento cadastrado com sucesso para ' + nomePac + ' às ' + hor + '!',
+      'info'
+    );
+  }
+
+  $('btnAgendar').addEventListener('click', executarNovoAgendamento);
+
+  // ---------------------------------------------------------------------
+  // 6. Calendário interativo
+  // ---------------------------------------------------------------------
+  function atualizarGradeCalendario() {
+    const ano = mesAnoAtual.ano;
+    const mes = mesAnoAtual.mes;
+
+    gradeDiasCal.innerHTML = '';
+    lblMesAnoCal.textContent = MESES[mes - 1] + ' de ' + ano;
+
+    ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].forEach((d) => {
+      gradeDiasCal.appendChild(el('div', 'cal-sem', d));
+    });
+
+    const offsetSemana = new Date(ano, mes - 1, 1).getDay(); // domingo = 0
+    const totalDiasMes = new Date(ano, mes, 0).getDate();
+    const diasMesAnterior = new Date(ano, mes - 1, 0).getDate();
+    const totalCelulas = Math.ceil((offsetSemana + totalDiasMes) / 7) * 7;
+
+    for (let i = 0; i < totalCelulas; i++) {
+      let numeroDia;
+      let mesCorrente;
+
+      if (i < offsetSemana) {
+        numeroDia = diasMesAnterior - offsetSemana + 1 + i;
+        mesCorrente = false;
+      } else if (i - offsetSemana < totalDiasMes) {
+        numeroDia = (i - offsetSemana) + 1;
+        mesCorrente = true;
+      } else {
+        numeroDia = (i - offsetSemana - totalDiasMes) + 1;
+        mesCorrente = false;
+      }
+
+      const selecionado = mesCorrente && numeroDia === diaSelecionadoCal;
+      let classe = 'cal-dia ' + (mesCorrente ? 'atual' : 'outro');
+      if (selecionado) classe += ' selecionado';
+
+      const celula = el('div', classe);
+      celula.appendChild(el('span', 'cal-num', String(numeroDia)));
+
+      if (mesCorrente) {
+        celula.addEventListener('click', () => {
+          diaSelecionadoCal = numeroDia;
+          const dd = String(diaSelecionadoCal).padStart(2, '0');
+          const mm = String(mesAnoAtual.mes).padStart(2, '0');
+          valorData = dd + '/' + mm + '/' + mesAnoAtual.ano;
+          definirValor(lblValorData, valorData, true);
+          atualizarGradeCalendario();
+        });
+      }
+
+      gradeDiasCal.appendChild(celula);
+    }
+  }
+
+  function mudarMes(delta) {
+    let mes = mesAnoAtual.mes + delta;
+    let ano = mesAnoAtual.ano;
+    if (mes < 1) { mes = 12; ano--; }
+    if (mes > 12) { mes = 1; ano++; }
+    mesAnoAtual = { ano: ano, mes: mes };
+    atualizarGradeCalendario();
+  }
+
+  $('calAnterior').addEventListener('click', () => mudarMes(-1));
+  $('calProximo').addEventListener('click', () => mudarMes(1));
+
+  // ---------------------------------------------------------------------
+  // Inicialização
+  // ---------------------------------------------------------------------
+  render();
+  atualizarGradeCalendario();
+})();
+
+  </script>
+</body>
+</html>

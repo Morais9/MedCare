@@ -1,0 +1,42 @@
+2026-11-11T13:50:27  Fetching changes.
+2026-11-11T13:50:27    Cleaning up temp folders from previous zip deployments and extracting pushed zip file /tmp/zipdeploy/app.jar (51.55 MB) to /tmp/zipdeploy/extracted
+2026-11-11T13:50:31  Updating submodules.
+2026-11-11T13:50:33  Preparing deployment for commit id '65deac7e-d'.
+2026-11-11T13:50:34  PreDeployment: context.CleanOutputPath False
+2026-11-11T13:50:35  PreDeployment: context.OutputPath /home/site/wwwroot
+2026-11-11T13:50:35  Running build. Project type: OneDeploy
+2026-11-11T13:50:36  Copying the manifest
+2026-11-11T13:50:36  Running deployment command...
+2026-11-11T13:50:36    Command: /opt/Kudu/Scripts/parallel_rsync.sh /tmp/zipdeploy/extracted /home/site/wwwroot 8 /tmp/ False False  
+2026-11-11T13:50:39    Run rsync from: /tmp/zipdeploy/extracted/ to: /home/site/wwwroot/ in 8 parallel threads
+2026-11-11T13:50:39    Delete options: clean=False, use manifest=False, directory to ignore=
+2026-11-11T13:50:39    Prev manifest = /home/site/deployments/4641a037-893d-477e-93be-445b5d3d629e/manifest and next /home/site/deployments/65deac7e-d3dd-4b37-95cc-7aa3d51dc713/manifest
+2026-11-11T13:50:39    Cleaning up /tmp//filelist.txt and /tmp//splits
+2026-11-11T13:50:39    Creating a list of all files at /tmp//filelist.txt
+2026-11-11T13:50:39    No directory to exclude.
+2026-11-11T13:50:39    Created /tmp//filelist.txt. Total number of files to be synced = 1.
+2026-11-11T13:50:39    Created batches from the list of files. Processing 1 files in each thread
+2026-11-11T13:50:40    Running rsync for filelist /tmp//splits/split.aa from /tmp/zipdeploy/extracted/ to /home/site/wwwroot/
+2026-11-11T13:51:01    
+2026-11-11T13:51:01    Number of files: 1 (reg: 1)
+2026-11-11T13:51:02    Number of created files: 0
+2026-11-11T13:51:02    Number of deleted files: 0
+2026-11-11T13:51:02    Number of regular files transferred: 1
+2026-11-11T13:51:02    Total file size: 54.05M bytes
+2026-11-11T13:51:02    Total transferred file size: 54.05M bytes
+2026-11-11T13:51:02    Literal data: 54.05M bytes
+2026-11-11T13:51:02    Matched data: 0 bytes
+2026-11-11T13:51:02    File list size: 0
+2026-11-11T13:51:02    File list generation time: 0.001 seconds
+2026-11-11T13:51:03    File list transfer time: 0.000 seconds
+2026-11-11T13:51:03    Total bytes sent: 48.11M
+2026-11-11T13:51:03    Total bytes received: 35
+2026-11-11T13:51:03    
+2026-11-11T13:51:03    sent 48.11M bytes  received 35 bytes  2.24M bytes/sec
+2026-11-11T13:51:03    total size is 54.05M  speedup is 1.12
+2026-11-11T13:51:03    Attempt 1: Rsync for filelist /tmp//splits/split.aa completed with exit code 0
+2026-11-11T13:51:04    Completed successfully in 23 seconds
+2026-11-11T13:51:04  Build completed succesfully.
+2026-11-11T13:51:05  Running post deployment command(s)...
+2026-11-11T13:51:05  Triggering container recycle for OneDeploy by adding/updating restartTrigger.txt to the site root path
+2026-11-11T13:51:06  Deployment successful. deployer = OneDeploy deploymentPath = OneDeploy

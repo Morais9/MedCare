@@ -1,0 +1,715 @@
+
+:root {
+  --sidebar: #2D6048;
+  --sidebar-item-ativo: #5C9175;
+  --sidebar-item-hover: #41785C;
+  --fundo-geral: #F0F5F1;
+  --texto-titulo: #1A4D33;
+  --texto-subtitulo: #6E917D;
+  --cabecalho-tabela: #ACC4B7;
+  --card-verde-escuro: #22533C;
+  --card-verde-escuro-hover: #18412D;
+  --card-verde-medio: #609C7A;
+  --input-verde: #70A888;
+  --calendario-interno: #6CA085;
+  --verde-claro-logo: #91CDA8;
+
+  --linha-suave: #E1E8E4;
+  --borda-card: #DCE6E0;
+  --borda-busca: #C8D7CD;
+  --borda-combo: #B4C8BC;
+  --borda-pagina: #AAC3B4;
+  --grade-tabela: #E6ECE8;
+  --selecao-tabela: #E4F0E9;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  min-height: 100%;
+}
+
+body {
+  font-family: "DM Sans", Arial, sans-serif;
+  font-size: 13px;
+  background: var(--fundo-geral);
+  color: var(--texto-titulo);
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+input, button {
+  font-family: inherit;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Integração com o layout compartilhado do Dashboard */
+.main-panel { min-width: 0; }
+.dashboard-content { min-width: 0; }
+.conteudo { width: 100%; min-width: 0; }
+.corpo { min-width: 0; }
+
+/* =========================================================================
+   3. CONTEÚDO PRINCIPAL
+   ========================================================================= */
+.conteudo {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 18px 25px 25px;
+}
+
+.titulo-pagina {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.icone-usuario-grande {
+  flex: none;
+}
+
+.textos-titulo h1 {
+  font-size: 30px;
+  font-weight: bold;
+  line-height: 36px;
+  color: var(--texto-titulo);
+}
+
+.textos-titulo p {
+  margin-top: 2px;
+  font-size: 14px;
+  color: var(--texto-subtitulo);
+}
+
+.corpo {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  gap: 20px;
+}
+
+/* =========================================================================
+   4. CARD DA TABELA
+   ========================================================================= */
+.card-tabela {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 18px;
+  background: #fff;
+  border: 1px solid var(--borda-card);
+  border-radius: 8px;
+}
+
+/* Abas */
+.abas {
+  flex: none;
+  display: flex;
+  border-bottom: 1px solid var(--linha-suave);
+}
+
+.aba {
+  padding: 6px 16px 8px;
+  font-size: 14px;
+  font-weight: normal;
+  color: var(--texto-subtitulo);
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+}
+
+.aba.ativa {
+  font-weight: bold;
+  color: var(--texto-titulo);
+  border-bottom-color: var(--sidebar);
+}
+
+/* Filtros */
+.filtros {
+  flex: none;
+  display: flex;
+  gap: 10px;
+  padding: 12px 0 4px;
+}
+
+.busca {
+  flex: 1;
+  min-width: 0;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  background: #fff;
+  border: 1px solid var(--borda-busca);
+  border-radius: 8px;
+}
+
+.busca-lupa {
+  font-size: 12px;
+  color: var(--texto-subtitulo);
+}
+
+.busca input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 12px;
+  color: var(--texto-titulo);
+}
+
+.busca input::placeholder {
+  color: var(--texto-subtitulo);
+  opacity: 1;
+}
+
+.combos {
+  display: flex;
+  gap: 8px;
+  padding: 0 8px;
+}
+
+.campo-combo {
+  height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px;
+  background: #fff;
+  border: 1px solid var(--borda-combo);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--texto-titulo);
+  white-space: pre;
+  cursor: pointer;
+}
+
+.campo-combo img {
+  display: block;
+  flex: none;
+}
+
+.largura-periodo { width: 150px; } /* cabe "Esta Semana" */
+.largura-185 { width: 185px; }
+
+.combo-texto {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Tabela */
+.tabela-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #fff;
+}
+
+#tabela {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+  color: var(--texto-titulo);
+}
+
+#tabela thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  height: 38px;
+  padding: 0 10px;
+  background: var(--cabecalho-tabela);
+  color: var(--texto-titulo);
+  font-size: 13px;
+  font-weight: bold;
+  text-align: left;
+  cursor: pointer;
+}
+
+#tabela tbody tr {
+  height: 54px;
+  cursor: pointer;
+}
+
+#tabela tbody td {
+  padding: 0 10px;
+  background: #fff;
+  border-bottom: 1px solid var(--grade-tabela);
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--texto-titulo);
+}
+
+#tabela tbody tr.selecionada td {
+  background: var(--selecao-tabela);
+}
+
+#tabela tbody td.col-paciente {
+  padding: 8px 5px 8px 10px;
+}
+
+.paciente-nome {
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 16px;
+  color: var(--texto-titulo);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.paciente-cpf {
+  margin-top: 2px;
+  font-size: 11px;
+  line-height: 14px;
+  color: var(--texto-subtitulo);
+}
+
+#tabela tbody td.col-status {
+  padding-left: 6px;
+  padding-right: 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 11px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.st-atendimento { background: #A5C6FA; color: #193C78; }
+.st-confirmado  { background: #A8DAB9; color: #195030; }
+.st-aguardando  { background: #DCDCDC; color: #4B4B4B; }
+.st-reagendado  { background: #F5CDAC; color: #8C4619; }
+
+/* Rodapé da tabela */
+.rodape-tabela {
+  flex: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 4px 0;
+  border-top: 1px solid var(--linha-suave);
+}
+
+.contagem {
+  font-size: 12px;
+  color: var(--texto-subtitulo);
+}
+
+.paginacao {
+  display: flex;
+  gap: 5px;
+  padding: 0 5px;
+}
+
+.pag-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 1px solid var(--borda-pagina);
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--texto-titulo);
+  cursor: pointer;
+}
+
+.pag-btn.ativo {
+  background: var(--card-verde-escuro);
+  border-color: transparent;
+  color: #fff;
+}
+
+/* =========================================================================
+   5. COLUNA DIREITA
+   ========================================================================= */
+.coluna-direita {
+  width: 275px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Card Novo Agendamento */
+.card-novo {
+  flex: none;
+  background: var(--card-verde-medio);
+  border-radius: 8px;
+}
+
+.card-novo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  background: var(--card-verde-escuro);
+  border-radius: 8px;
+  color: #fff;
+}
+
+.card-novo-titulo {
+  font-size: 15px;
+  font-weight: bold;
+  white-space: pre;
+}
+
+.card-novo-seta {
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 22px;
+}
+
+.form {
+  padding: 12px 14px 14px;
+}
+
+.label-form {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #122D1E;
+}
+
+.campo-verde {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  margin-bottom: 10px;
+  padding: 0 8px 0 10px;
+  background: var(--input-verde);
+  border: 1px solid #1C4430;
+  border-radius: 6px;
+}
+
+.campo-verde.sem-margem {
+  margin-bottom: 0;
+}
+
+.campo-verde.seletor {
+  cursor: pointer;
+}
+
+.input-paciente {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 11px;
+  color: #fff;
+  caret-color: #fff;
+}
+
+.input-paciente::placeholder {
+  color: #E1F0E6;
+  opacity: 1;
+}
+
+.valor {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  color: #E1F0E6;
+}
+
+.valor.preenchido {
+  color: #fff;
+}
+
+.icone-campo {
+  flex: none;
+  margin-left: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #143223;
+}
+
+.lupa-campo {
+  font-size: 11px;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.linha-data-hora {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.btn-agendar {
+  height: 38px;
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card-verde-escuro);
+  border-radius: 7px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn-agendar:hover {
+  background: var(--card-verde-escuro-hover);
+}
+
+/* Card do Calendário */
+.card-calendario {
+  flex: 1;
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: var(--sidebar);
+  border-radius: 8px;
+}
+
+.cal-topo {
+  flex: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cal-titulo {
+  font-size: 13px;
+  color: #DCEBE1;
+}
+
+.cal-setas {
+  display: flex;
+  gap: 8px;
+  padding: 0 8px;
+}
+
+.cal-seta {
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+}
+
+.cal-grade {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 2px;
+  padding: 8px 6px;
+  background: var(--calendario-interno);
+  border-radius: 6px;
+}
+
+.cal-sem,
+.cal-dia {
+  container-type: size;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  font-size: 11px;
+}
+
+.cal-sem {
+  font-weight: bold;
+  color: #143726;
+}
+
+.cal-dia {
+  font-weight: normal;
+}
+
+.cal-dia.atual {
+  color: #123020;
+  cursor: pointer;
+}
+
+.cal-dia.outro {
+  color: #375F48;
+}
+
+.cal-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(min(100cqw, 100cqh) - 2px);
+  height: calc(min(100cqw, 100cqh) - 2px);
+  border-radius: 50%;
+}
+
+.cal-dia.selecionado {
+  font-weight: bold;
+  color: #D2EBDC;
+}
+
+.cal-dia.selecionado .cal-num {
+  background: var(--sidebar);
+}
+
+/* =========================================================================
+   MENU POPUP (equivalente ao JPopupMenu)
+   ========================================================================= */
+.popup-menu {
+  position: fixed;
+  z-index: 2000;
+  min-width: 120px;
+  padding: 2px 0;
+  background: #fff;
+  border: 1px solid #A8B8AE;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  font-size: 12px;
+  color: #1B1B1B;
+}
+
+.popup-item {
+  padding: 5px 24px 5px 12px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.popup-item:hover {
+  background: var(--selecao-tabela);
+  color: var(--texto-titulo);
+}
+
+/* =========================================================================
+   DIÁLOGOS (equivalente ao JOptionPane)
+   ========================================================================= */
+.dialogo-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.dialogo {
+  min-width: 340px;
+  max-width: 480px;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3);
+}
+
+.dialogo-titulo {
+  padding: 10px 16px;
+  background: var(--sidebar);
+  color: #fff;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.dialogo-corpo {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 20px 22px 8px;
+}
+
+.dialogo-icone {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.dialogo-icone.info     { background: var(--card-verde-medio); }
+.dialogo-icone.aviso    { background: #E0A030; }
+.dialogo-icone.pergunta { background: var(--sidebar); }
+
+.dialogo-conteudo {
+  flex: 1;
+  min-width: 0;
+}
+
+.dialogo-msg {
+  padding-top: 6px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--texto-titulo);
+  white-space: pre-line;
+}
+
+.dialogo-input {
+  width: 100%;
+  margin-top: 10px;
+  padding: 6px 8px;
+  border: 1px solid var(--borda-busca);
+  border-radius: 4px;
+  outline: none;
+  font-size: 13px;
+  color: var(--texto-titulo);
+}
+
+.dialogo-input:focus {
+  border-color: var(--sidebar);
+}
+
+.dialogo-botoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 14px 22px 18px;
+}
+
+.dialogo-btn {
+  min-width: 72px;
+  padding: 7px 18px;
+  background: #fff;
+  border: 1px solid var(--borda-pagina);
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--texto-titulo);
+  cursor: pointer;
+}
+
+.dialogo-btn.principal {
+  background: var(--card-verde-escuro);
+  border-color: var(--card-verde-escuro);
+  color: #fff;
+}
+
+.dialogo-btn:focus-visible {
+  outline: 2px solid var(--card-verde-medio);
+  outline-offset: 1px;
+}

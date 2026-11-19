@@ -1,15 +1,17 @@
 
 package com.medcare.config;
 
+import com.medcare.service.UsuarioDetailsService;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.authentication.AuthenticationProvider;
-import com.medcare.service.UsuarioDetailsService;
 
 @Configuration
 public class SecurityConfig {
@@ -60,8 +62,18 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .usernameParameter("email")
                         .passwordParameter("senha")
-                        .defaultSuccessUrl("/dashboard", true)
-                        .failureUrl("/login?error=true")
+                        .defaultSuccessUrl("/dashboard", false)
+                        .failureHandler((request, response, exception) -> {
+
+                            if (exception instanceof DisabledException) {
+                                response.sendRedirect(
+                                        "/login?aguardandoAprovacao=true"
+                                );
+                            } else {
+                                response.sendRedirect("/login?error=true");
+                            }
+
+                        })
                         .permitAll()
                 )
 
