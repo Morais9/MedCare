@@ -41,6 +41,10 @@ public class Usuario {
     @Column(nullable = false, length = 60)
     private String cargo;
 
+    @Size(max = 100)
+    @Column(length = 100)
+    private String especialidade;
+
     @Column(nullable = false)
     private boolean ativo = false;
 
@@ -48,6 +52,13 @@ public class Usuario {
     private LocalDateTime dataCadastro = LocalDateTime.now();
 
     public Usuario() {
+    }
+
+    @PrePersist
+    public void antesDeSalvar() {
+        if (dataCadastro == null) {
+            dataCadastro = LocalDateTime.now();
+        }
     }
 
     public Long getId() {
@@ -98,6 +109,14 @@ public class Usuario {
         this.cargo = cargo;
     }
 
+    public String getEspecialidade() {
+        return especialidade;
+    }
+
+    public void setEspecialidade(String especialidade) {
+        this.especialidade = especialidade;
+    }
+
     public boolean isAtivo() {
         return ativo;
     }
@@ -112,12 +131,5 @@ public class Usuario {
 
     public void setDataCadastro(LocalDateTime dataCadastro) {
         this.dataCadastro = dataCadastro;
-    }
-
-    @PrePersist
-    public void antesDeSalvar() {
-        if (dataCadastro == null) {
-            dataCadastro = LocalDateTime.now();
-        }
     }
 }

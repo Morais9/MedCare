@@ -157,6 +157,8 @@
                     </div>
 
                     <!-- CARGO -->
+
+                    <!-- CARGO -->
                     <div class="col-md-6">
 
                         <label class="form-label" for="cargo">
@@ -168,10 +170,7 @@
                                 th:field="*{cargo}"
                                 required>
 
-                            <option value="">
-                                Selecione seu perfil
-                            </option>
-
+                            <option value="">Selecione seu perfil</option>
                             <option value="Recepcionista">Recepcionista</option>
                             <option value="Medico">Médico</option>
                             <option value="Enfermeira">Enfermeira</option>
@@ -180,11 +179,47 @@
 
                         </select>
 
-                        <div class="text-danger small"
-                             th:errors="*{cargo}">
+                        <div class="text-danger small" th:errors="*{cargo}"></div>
+
+                    </div>
+
+                    <!-- ESPECIALIDADE -->
+                    <div class="col-12 d-none" id="campoEspecialidade">
+
+                        <label class="form-label" for="especialidade">
+                            Especialidade ou área de atuação
+                        </label>
+
+                        <input class="form-control"
+                               id="especialidade"
+                               type="text"
+                               th:field="*{especialidade}"
+                               list="listaEspecialidades"
+                               placeholder="Selecione ou digite sua especialidade"
+                               maxlength="100">
+
+                        <datalist id="listaEspecialidades">
+                            <option value="Clínico Geral">
+                            <option value="Cardiologia">
+                            <option value="Pediatria">
+                            <option value="Dermatologia">
+                            <option value="Neurologia">
+                            <option value="Ortopedia">
+                            <option value="Ginecologia">
+                            <option value="Psiquiatria">
+                            <option value="Radiologia">
+                            <option value="Enfermagem Geral">
+                            <option value="Enfermagem Obstétrica">
+                            <option value="Enfermagem Intensiva">
+                            <option value="Outra especialidade">
+                        </datalist>
+
+                        <div class="field-hint">
+                            Informe a especialidade ou área em que atua no hospital.
                         </div>
 
                     </div>
+
 
                     <!-- E-MAIL -->
                     <div class="col-12">
@@ -306,6 +341,39 @@
 
     const cpfInput = document.getElementById('cpf');
     const form = document.getElementById('signupForm');
+
+    const cargoSelect = document.getElementById('cargo');
+    const campoEspecialidade = document.getElementById('campoEspecialidade');
+    const especialidadeInput = document.getElementById('especialidade');
+
+    // Controla a exibição da especialidade conforme o cargo
+    function atualizarEspecialidade() {
+
+        const cargo = cargoSelect.value;
+
+        const exigeEspecialidade = [
+            'Medico',
+            'Enfermeira',
+            'Radiologista',
+            'Outro profissional'
+        ];
+
+        const deveExibir = exigeEspecialidade.includes(cargo);
+
+        campoEspecialidade.classList.toggle('d-none', !deveExibir);
+
+        especialidadeInput.required = deveExibir;
+
+        if (!deveExibir) {
+            especialidadeInput.value = '';
+        }
+    }
+
+    // Atualiza quando o usuário troca o cargo
+    cargoSelect.addEventListener('change', atualizarEspecialidade);
+
+    // Executa ao carregar a página
+    atualizarEspecialidade();
 
     // Máscara de CPF
     cpfInput.addEventListener('input', () => {

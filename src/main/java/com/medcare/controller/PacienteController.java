@@ -24,12 +24,14 @@ public class PacienteController {
         this.pacienteService = pacienteService;
     }
 
+
     @PostMapping
     public String cadastrar(
             @ModelAttribute Paciente paciente,
             RedirectAttributes redirectAttributes) {
 
         try {
+
             pacienteService.cadastrar(paciente);
 
             redirectAttributes.addFlashAttribute(
@@ -37,22 +39,42 @@ public class PacienteController {
                     "Paciente cadastrado com sucesso!"
             );
 
+            return "redirect:/dashboard";
+
         } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute(
-                    "erro",
-                    e.getMessage()
-            );
 
-        } catch (Exception e) {
-            logger.error("Erro ao cadastrar paciente", e);
+        // Limpa somente o CPF e preserva os demais dados
+        paciente.setCpf(null);
 
-            redirectAttributes.addFlashAttribute(
-                    "erro",
-                    "Não foi possível cadastrar o paciente."
-            );
-        }
+        redirectAttributes.addFlashAttribute(
+                "pacienteForm",
+                paciente
+        );
 
-        return "redirect:/dashboard";
+        redirectAttributes.addFlashAttribute(
+                "erro",
+                e.getMessage()
+        );
+
+        return "redirect:/dashboard#new-patient";
+
+    } catch (Exception e) {
+
+        logger.error("Erro ao cadastrar paciente", e);
+
+        // Preserva os dados preenchidos
+        redirectAttributes.addFlashAttribute(
+                "pacienteForm",
+                paciente
+        );
+
+        redirectAttributes.addFlashAttribute(
+                "erro",
+                "Não foi possível cadastrar o paciente."
+        );
+
+        return "redirect:/dashboard#new-patient";
+    }
     }
 
     @PostMapping("/{id}/editar")
