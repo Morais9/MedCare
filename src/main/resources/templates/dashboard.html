@@ -62,27 +62,33 @@
         <div class="sidebar-bottom">
 
             <div class="sidebar-user">
+
                 <div class="avatar" th:text="${iniciaisUsuario}">US</div>
 
                 <div class="sidebar-user-info">
                     <strong th:text="${nomeUsuario}">Usuário</strong>
                     <span th:text="${cargoUsuario}">Profissional</span>
                 </div>
+
             </div>
 
             <form th:action="@{/logout}" method="post">
+
                 <button class="logout-button" type="submit">
                     <span class="nav-icon">⇥</span>
                     Sair do sistema
                 </button>
+
             </form>
 
         </div>
 
     </aside>
 
+
     <!-- CONTEÚDO PRINCIPAL -->
     <div class="main-panel">
+
 
         <!-- CABEÇALHO -->
         <header class="topbar">
@@ -95,36 +101,48 @@
 
             <div class="topbar-actions">
 
+                <!-- NOTIFICAÇÕES -->
                 <details class="dropdown">
+
                     <summary class="notification-button" aria-label="Notificações">
                         ♧
                         <span class="notification-dot"></span>
                     </summary>
 
                     <div class="dropdown-panel notification-panel">
+
                         <h3>Notificações</h3>
 
                         <div class="notification-item">
+
                             <span class="notification-indicator"></span>
+
                             <div>
                                 <strong>Bem-vindo ao MedCare</strong>
                                 <p>Seu acesso ao sistema foi realizado.</p>
                                 <small>Notificação do sistema</small>
                             </div>
+
                         </div>
 
                         <div class="dropdown-footer">
                             Nenhuma outra notificação disponível.
                         </div>
+
                     </div>
+
                 </details>
+
 
                 <span class="topbar-divider"></span>
 
+
+                <!-- PERFIL DO USUÁRIO -->
                 <details class="dropdown">
+
                     <summary class="profile-button">
-                        <div class="avatar"
-                             th:text="${iniciaisUsuario}">US</div>
+
+                        <div class="avatar" th:text="${iniciaisUsuario}">US</div>
 
                         <div class="profile-summary">
                             <strong th:text="${nomeUsuario}">Usuário</strong>
@@ -132,9 +150,11 @@
                         </div>
 
                         <span class="profile-arrow">⌄</span>
+
                     </summary>
 
                     <div class="dropdown-panel profile-panel">
+
                         <div class="profile-dropdown-heading">
                             <strong th:text="${nomeUsuario}">Usuário</strong>
                             <span th:text="${cargoUsuario}">Profissional</span>
@@ -146,31 +166,57 @@
                         </div>
 
                         <form th:action="@{/logout}" method="post">
+
                             <button class="dropdown-logout" type="submit">
                                 Sair da conta
                             </button>
+
                         </form>
+
                     </div>
+
                 </details>
 
             </div>
 
         </header>
 
+
         <!-- PÁGINA DE PACIENTES -->
         <main class="dashboard-content" id="dashboard">
 
+
+            <!-- Mensagem de sucesso -->
+            <div class="alert alert-success"
+                 th:if="${sucesso != null}"
+                 th:text="${sucesso}">
+            </div>
+
+            <!-- Mensagem de erro -->
+            <div class="alert alert-error"
+                 th:if="${erro != null}"
+                 th:text="${erro}">
+            </div>
+
+
+            <!-- TÍTULO -->
             <section class="page-heading">
+
                 <div class="heading-icon">♙</div>
 
                 <div>
                     <h1>Pacientes</h1>
                     <p>Cadastre, consulte e gerencie os pacientes do hospital.</p>
                 </div>
+
             </section>
 
+
+            <!-- BANNER DE BOAS-VINDAS -->
             <section class="welcome-banner">
+
                 <div>
+
                     <span class="welcome-eyebrow">PAINEL DE ATENDIMENTO</span>
 
                     <h2>
@@ -179,20 +225,27 @@
                     </h2>
 
                     <p>Bem-vindo ao sistema de gestão hospitalar MedCare.</p>
+
                 </div>
 
                 <div class="welcome-symbol">+</div>
+
             </section>
 
+
+            <!-- BARRA DE FERRAMENTAS -->
             <section class="patient-toolbar">
 
                 <div class="search-field">
+
                     <span>⌕</span>
+
                     <input
                             type="search"
+                            id="buscarPaciente"
                             placeholder="Buscar paciente..."
-                            disabled
                             aria-label="Buscar paciente">
+
                 </div>
 
                 <a class="primary-button" href="#new-patient">
@@ -202,257 +255,233 @@
 
             </section>
 
-            <section class="patient-layout">
+
+            <!-- ÁREA DE PACIENTES -->
+            <div class="patient-layout">
+
 
                 <!-- LISTA DE PACIENTES -->
                 <aside class="panel-card patient-list">
 
                     <div class="panel-heading">
+
                         <div>
                             <h2>Lista de pacientes</h2>
                             <p>Pacientes cadastrados</p>
                         </div>
 
-                        <span class="count-badge">1</span>
+                        <span class="count-badge"
+                              th:text="${totalPacientes}">0</span>
+
                     </div>
 
-                    <a class="patient-item selected" href="#patient-details">
 
-                        <div class="avatar patient-avatar">FB</div>
+                    <!-- LISTA VAZIA -->
+                    <div class="empty-list-note"
+                         th:if="${#lists.isEmpty(pacientes)}">
+
+                        Nenhum paciente cadastrado ainda.
+
+                    </div>
+
+
+                    <!-- PACIENTES CADASTRADOS -->
+                    <a class="patient-item"
+                       th:each="paciente : ${pacientes}"
+                       th:href="@{/dashboard(pacienteId=${paciente.id})}"
+                       th:classappend="${pacienteSelecionado != null
+                        and pacienteSelecionado.id == paciente.id} ? ' selected' : ''"
+                    >
+
+
+                    <div class="avatar patient-avatar"
+                             th:text="${#strings.substring(paciente.nome, 0, 1).toUpperCase()}">
+                            P
+                        </div>
 
                         <div class="patient-summary">
-                            <strong>Fernando Bartiele</strong>
-                            <span>CPF: 123.456.789-00</span>
-                            <small>Prontuário: 000123</small>
+
+                            <strong th:text="${paciente.nome}">
+                                Nome do paciente
+                            </strong>
+
+                            <span th:text="'CPF: ' + ${paciente.cpf}">
+                                CPF
+                            </span>
+
+                            <small th:text="'Prontuário: ' + ${paciente.id}">
+                                Prontuário
+                            </small>
+
                         </div>
 
                         <span class="patient-arrow">›</span>
 
                     </a>
 
-                    <div class="empty-list-note">
-                        Exibindo dados demonstrativos.
-                    </div>
-
                 </aside>
 
-                <!-- FICHA DO PACIENTE -->
+
+                <!-- DETALHES DO PACIENTE -->
                 <section class="panel-card patient-details" id="patient-details">
 
-                    <header class="patient-header">
+                    <!-- Nenhum paciente selecionado -->
+                    <div class="empty-list-note"
+                         th:if="${pacienteSelecionado == null}">
 
-                        <div class="avatar patient-avatar large-avatar">FB</div>
+                        <h2>Nenhum paciente selecionado</h2>
 
-                        <div class="patient-identification">
-                            <span class="section-eyebrow">PRONTUÁRIO 000123</span>
-                            <h2>Fernando Bartiele</h2>
+                        <p>
+                            Selecione um paciente na lista para visualizar
+                            suas informações.
+                        </p>
 
-                            <div class="patient-meta">
-                                <span>CPF: 123.456.789-00</span>
-                                <span>34 anos</span>
+                    </div>
+
+                    <!-- Ficha do paciente selecionado -->
+                    <div th:if="${pacienteSelecionado != null}">
+
+                        <div class="panel-heading">
+                            <div>
+                                <h2>Ficha do paciente</h2>
+                                <p>Informações cadastrais</p>
                             </div>
+
+                            <span class="count-badge"
+                                  th:text="'#' + ${pacienteSelecionado.id}">
+                #0
+            </span>
                         </div>
 
-                        <a class="secondary-button" href="#edit-patient">
-                            Editar dados
-                        </a>
+                        <div class="patient-profile">
 
-                    </header>
+                            <div class="avatar patient-avatar"
+                                 th:text="${#strings.substring(pacienteSelecionado.nome, 0, 1).toUpperCase()}">
+                                P
+                            </div>
 
-                    <!-- ABAS -->
-                    <div class="patient-tabs-container">
+                            <div class="patient-summary">
+                                <strong th:text="${pacienteSelecionado.nome}">
+                                    Nome do paciente
+                                </strong>
 
-                        <input class="tab-radio" type="radio"
-                               name="patient-tab" id="tab-personal" checked>
+                                <span th:text="'CPF: ' + ${pacienteSelecionado.cpf}">
+                    CPF
+                </span>
+                            </div>
 
-                        <input class="tab-radio" type="radio"
-                               name="patient-tab" id="tab-history">
+                        </div>
 
-                        <input class="tab-radio" type="radio"
-                               name="patient-tab" id="tab-consultations">
+                        <div class="patient-information">
 
-                        <input class="tab-radio" type="radio"
-                               name="patient-tab" id="tab-exams">
+                            <h3>Dados pessoais</h3>
 
-                        <input class="tab-radio" type="radio"
-                               name="patient-tab" id="tab-appointments">
-
-                        <nav class="patient-tabs">
-                            <label for="tab-personal">Dados pessoais</label>
-                            <label for="tab-history">Histórico</label>
-                            <label for="tab-consultations">Consultas</label>
-                            <label for="tab-exams">Exames</label>
-                            <label for="tab-appointments">Agendamentos</label>
-                        </nav>
-
-                        <div class="tab-panels">
-
-                            <!-- DADOS PESSOAIS -->
-                            <section class="tab-panel personal-panel">
-
-                                <div class="data-grid">
-
-                                    <div class="data-section">
-                                        <h3>Informações pessoais</h3>
-
-                                        <dl class="data-list">
-                                            <dt>Nome completo</dt>
-                                            <dd>Fernando Bartiele</dd>
-
-                                            <dt>CPF</dt>
-                                            <dd>123.456.789-00</dd>
-
-                                            <dt>Data de nascimento</dt>
-                                            <dd>12/05/1992</dd>
-
-                                            <dt>Sexo</dt>
-                                            <dd>Masculino</dd>
-
-                                            <dt>Telefone</dt>
-                                            <dd>(11) 99999-8888</dd>
-
-                                            <dt>E-mail</dt>
-                                            <dd>fernando@email.com</dd>
-                                        </dl>
-                                    </div>
-
-                                    <div class="data-section">
-                                        <h3>Endereço</h3>
-
-                                        <dl class="data-list">
-                                            <dt>Rua</dt>
-                                            <dd>Av. Paulista, 1900</dd>
-
-                                            <dt>Bairro</dt>
-                                            <dd>Bela Vista</dd>
-
-                                            <dt>Cidade</dt>
-                                            <dd>São Paulo</dd>
-
-                                            <dt>CEP</dt>
-                                            <dd>04536-100</dd>
-                                        </dl>
-                                    </div>
-
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Data de nascimento</label>
+                                    <p th:text="${pacienteSelecionado.dataNascimento != null
+                        ? #temporals.format(pacienteSelecionado.dataNascimento, 'dd/MM/yyyy')
+                        : 'Não informado'}">
+                                        Não informado
+                                    </p>
                                 </div>
 
-                            </section>
+                                <div class="form-group">
+                                    <label>Sexo</label>
+                                    <p th:text="${pacienteSelecionado.sexo != null
+                        and !#strings.isEmpty(pacienteSelecionado.sexo)
+                        ? pacienteSelecionado.sexo
+                        : 'Não informado'}">
+                                        Não informado
+                                    </p>
+                                </div>
+                            </div>
 
-                            <!-- HISTÓRICO -->
-                            <section class="tab-panel history-panel">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Telefone</label>
+                                    <p th:text="${pacienteSelecionado.telefone != null
+                        and !#strings.isEmpty(pacienteSelecionado.telefone)
+                        ? pacienteSelecionado.telefone
+                        : 'Não informado'}">
+                                        Não informado
+                                    </p>
+                                </div>
 
-                                <h3 class="section-title">Histórico do paciente</h3>
+                                <div class="form-group">
+                                    <label>E-mail</label>
+                                    <p th:text="${pacienteSelecionado.email != null
+                        and !#strings.isEmpty(pacienteSelecionado.email)
+                        ? pacienteSelecionado.email
+                        : 'Não informado'}">
+                                        Não informado
+                                    </p>
+                                </div>
+                            </div>
 
-                                <article class="record-card">
-                                    <div class="record-heading">
-                                        <h4>Consulta de rotina</h4>
-                                        <time>15/10/2026</time>
-                                    </div>
+                            <h3>Endereço</h3>
 
-                                    <p>Avaliação com a Dra. Mariana Souza.</p>
-                                    <span class="status status-success">Concluída</span>
-                                </article>
+                            <div class="form-group">
+                                <label>Rua e número</label>
+                                <p th:text="${pacienteSelecionado.endereco != null
+                    and !#strings.isEmpty(pacienteSelecionado.endereco)
+                    ? pacienteSelecionado.endereco
+                    : 'Não informado'}">
+                                    Não informado
+                                </p>
+                            </div>
 
-                                <article class="record-card">
-                                    <div class="record-heading">
-                                        <h4>Cadastro realizado</h4>
-                                        <time>01/10/2026</time>
-                                    </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Bairro</label>
+                                    <p th:text="${pacienteSelecionado.bairro != null
+                        and !#strings.isEmpty(pacienteSelecionado.bairro)
+                        ? pacienteSelecionado.bairro
+                        : 'Não informado'}">
+                                        Não informado
+                                    </p>
+                                </div>
 
-                                    <p>Dados pessoais registrados pela recepção.</p>
-                                </article>
+                                <div class="form-group">
+                                    <label>Cidade</label>
+                                    <p th:text="${pacienteSelecionado.cidade != null
+                        and !#strings.isEmpty(pacienteSelecionado.cidade)
+                        ? pacienteSelecionado.cidade
+                        : 'Não informado'}">
+                                        Não informado
+                                    </p>
+                                </div>
+                            </div>
 
-                            </section>
+                            <div class="form-group">
+                                <label>CEP</label>
+                                <p th:text="${pacienteSelecionado.cep != null
+                    and !#strings.isEmpty(pacienteSelecionado.cep)
+                    ? pacienteSelecionado.cep
+                    : 'Não informado'}">
+                                    Não informado
+                                </p>
+                            </div>
 
-                            <!-- CONSULTAS -->
-                            <section class="tab-panel consultations-panel">
+                            <h3>Registro no sistema</h3>
 
-                                <h3 class="section-title">Consultas</h3>
-
-                                <article class="record-card">
-                                    <div class="record-heading">
-                                        <h4>Clínico geral</h4>
-                                        <span class="status status-success">Realizada</span>
-                                    </div>
-
-                                    <dl class="record-data">
-                                        <dt>Profissional</dt>
-                                        <dd>Dra. Mariana Souza</dd>
-
-                                        <dt>Data</dt>
-                                        <dd>15/10/2026 às 10h</dd>
-
-                                        <dt>Observações</dt>
-                                        <dd>Consulta de rotina. Retorno agendado.</dd>
-                                    </dl>
-                                </article>
-
-                            </section>
-
-                            <!-- EXAMES -->
-                            <section class="tab-panel exams-panel">
-
-                                <h3 class="section-title">Exames</h3>
-
-                                <article class="record-card">
-                                    <div class="record-heading">
-                                        <h4>Hemograma completo</h4>
-                                        <span class="status status-success">Disponível</span>
-                                    </div>
-
-                                    <p>Coleta realizada em 16/10/2026.</p>
-                                    <a class="record-link" href="#exam-result">
-                                        Visualizar resultado →
-                                    </a>
-                                </article>
-
-                                <article class="record-card">
-                                    <div class="record-heading">
-                                        <h4>Glicemia em jejum</h4>
-                                        <span class="status status-warning">Em análise</span>
-                                    </div>
-
-                                    <p>Coleta realizada em 22/10/2026.</p>
-                                </article>
-
-                            </section>
-
-                            <!-- AGENDAMENTOS -->
-                            <section class="tab-panel appointments-panel">
-
-                                <h3 class="section-title">Próximos agendamentos</h3>
-
-                                <article class="record-card">
-                                    <div class="record-heading">
-                                        <h4>Retorno — Clínico geral</h4>
-                                        <span class="status status-info">Confirmado</span>
-                                    </div>
-
-                                    <dl class="record-data">
-                                        <dt>Data e horário</dt>
-                                        <dd>05/11/2026 às 14h30</dd>
-
-                                        <dt>Profissional</dt>
-                                        <dd>Dra. Mariana Souza</dd>
-
-                                        <dt>Local</dt>
-                                        <dd>Consultório 03</dd>
-                                    </dl>
-                                </article>
-
-                            </section>
+                            <div class="form-group">
+                                <label>Data de cadastro</label>
+                                <p th:text="${pacienteSelecionado.dataCadastro != null
+                    ? #temporals.format(pacienteSelecionado.dataCadastro, 'dd/MM/yyyy HH:mm')
+                    : 'Não informado'}">
+                                    Não informado
+                                </p>
+                            </div>
 
                         </div>
+
                     </div>
 
                 </section>
 
-            </section>
 
-            <p class="demo-disclaimer">
-                Os registros de pacientes exibidos nesta tela são demonstrativos
-                e ainda não estão conectados ao banco de dados.
-            </p>
+            </div>
 
         </main>
 
@@ -460,230 +489,261 @@
 
 </div>
 
+
 <!-- MODAL: NOVO PACIENTE -->
 <section class="modal-screen" id="new-patient">
 
-    <a class="modal-backdrop" href="#dashboard" aria-label="Fechar"></a>
+    <a class="modal-backdrop"
+       href="#dashboard"
+       aria-label="Fechar modal"></a>
 
     <div class="modal-card">
 
         <header class="modal-header">
-            <div>
-                <h2>Novo paciente</h2>
-                <p>Preencha os dados para cadastrar um paciente.</p>
-            </div>
 
-            <a class="close-modal" href="#dashboard">×</a>
+            <h2>Novo paciente</h2>
+
+            <a class="close-modal"
+               href="#dashboard"
+               aria-label="Fechar">×</a>
+
         </header>
 
-        <div class="form-notice">
-            Formulário demonstrativo. O cadastro ainda não está conectado ao banco.
-        </div>
-
-        <form class="patient-form">
-
-            <div class="form-grid">
-
-                <div class="form-field full-width">
-                    <label for="new-name">Nome completo</label>
-                    <input id="new-name" type="text"
-                           placeholder="Digite o nome completo">
-                </div>
-
-                <div class="form-field">
-                    <label for="new-cpf">CPF</label>
-                    <input id="new-cpf" type="text"
-                           placeholder="000.000.000-00">
-                </div>
-
-                <div class="form-field">
-                    <label for="new-birth">Data de nascimento</label>
-                    <input id="new-birth" type="date">
-                </div>
-
-                <div class="form-field">
-                    <label for="new-sex">Sexo</label>
-                    <select id="new-sex">
-                        <option value="">Selecione</option>
-                        <option>Masculino</option>
-                        <option>Feminino</option>
-                        <option>Outro</option>
-                        <option>Não informado</option>
-                    </select>
-                </div>
-
-                <div class="form-field">
-                    <label for="new-phone">Telefone</label>
-                    <input id="new-phone" type="tel"
-                           placeholder="(11) 99999-9999">
-                </div>
-
-                <div class="form-field full-width">
-                    <label for="new-email">E-mail</label>
-                    <input id="new-email" type="email"
-                           placeholder="paciente@email.com">
-                </div>
-
-                <div class="form-field full-width">
-                    <label for="new-street">Rua e número</label>
-                    <input id="new-street" type="text"
-                           placeholder="Endereço completo">
-                </div>
-
-                <div class="form-field">
-                    <label for="new-neighborhood">Bairro</label>
-                    <input id="new-neighborhood" type="text">
-                </div>
-
-                <div class="form-field">
-                    <label for="new-city">Cidade</label>
-                    <input id="new-city" type="text">
-                </div>
-
-                <div class="form-field">
-                    <label for="new-cep">CEP</label>
-                    <input id="new-cep" type="text"
-                           placeholder="00000-000">
-                </div>
-
-            </div>
-
-            <footer class="form-actions">
-                <a class="secondary-button" href="#dashboard">Cancelar</a>
-                <button class="primary-button" type="button"
-                        onclick="alert('O cadastro de pacientes ainda será integrado ao backend.')">
-                    Cadastrar paciente
-                </button>
-            </footer>
-
-        </form>
-
-    </div>
-</section>
-
-<!-- MODAL: EDITAR PACIENTE -->
-<section class="modal-screen" id="edit-patient">
-
-    <a class="modal-backdrop" href="#dashboard" aria-label="Fechar"></a>
-
-    <div class="modal-card">
-
-        <header class="modal-header">
-            <div>
-                <h2>Editar paciente</h2>
-                <p>Prontuário: 000123</p>
-            </div>
-
-            <a class="close-modal" href="#dashboard">×</a>
-        </header>
-
-        <div class="form-notice">
-            As alterações ainda não estão conectadas ao banco de dados.
-        </div>
-
-        <form class="patient-form">
-
-            <div class="form-grid">
-
-                <div class="form-field full-width">
-                    <label for="edit-name">Nome completo</label>
-                    <input id="edit-name" type="text"
-                           value="Fernando Bartiele">
-                </div>
-
-                <div class="form-field">
-                    <label for="edit-cpf">CPF</label>
-                    <input id="edit-cpf" type="text"
-                           value="123.456.789-00">
-                </div>
-
-                <div class="form-field">
-                    <label for="edit-birth">Data de nascimento</label>
-                    <input id="edit-birth" type="date"
-                           value="1992-05-12">
-                </div>
-
-                <div class="form-field">
-                    <label for="edit-sex">Sexo</label>
-                    <select id="edit-sex">
-                        <option selected>Masculino</option>
-                        <option>Feminino</option>
-                        <option>Outro</option>
-                        <option>Não informado</option>
-                    </select>
-                </div>
-
-                <div class="form-field">
-                    <label for="edit-phone">Telefone</label>
-                    <input id="edit-phone" type="tel"
-                           value="(11) 99999-8888">
-                </div>
-
-                <div class="form-field full-width">
-                    <label for="edit-email">E-mail</label>
-                    <input id="edit-email" type="email"
-                           value="fernando@email.com">
-                </div>
-
-            </div>
-
-            <footer class="form-actions">
-                <a class="secondary-button" href="#dashboard">Cancelar</a>
-                <button class="primary-button" type="button"
-                        onclick="alert('A edição de pacientes ainda será integrada ao backend.')">
-                    Salvar alterações
-                </button>
-            </footer>
-
-        </form>
-
-    </div>
-</section>
-
-<!-- MODAL: RESULTADO DE EXAME -->
-<section class="modal-screen" id="exam-result">
-
-    <a class="modal-backdrop" href="#dashboard" aria-label="Fechar"></a>
-
-    <div class="modal-card modal-small">
-
-        <header class="modal-header">
-            <h2>Hemograma completo</h2>
-            <a class="close-modal" href="#dashboard">×</a>
-        </header>
 
         <div class="modal-body">
-            <p><strong>Paciente:</strong> Fernando Bartiele</p>
-            <p><strong>Data da coleta:</strong> 16/10/2026</p>
 
-            <div class="form-notice">
-                O laudo será disponibilizado quando o módulo de exames
-                estiver conectado ao backend.
-            </div>
+            <form class="patient-form"
+                  th:action="@{/pacientes}"
+                  method="post">
+
+                <!-- DADOS PESSOAIS -->
+                <h3>Dados pessoais</h3>
+
+                <div class="form-group">
+
+                    <label for="new-name">Nome completo</label>
+
+                    <input
+                            type="text"
+                            id="new-name"
+                            name="nome"
+                            placeholder="Digite o nome completo"
+                            maxlength="120"
+                            required>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="new-cpf">CPF</label>
+
+                        <input
+                                type="text"
+                                id="new-cpf"
+                                name="cpf"
+                                placeholder="000.000.000-00"
+                                required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="new-birth">Data de nascimento</label>
+
+                        <input
+                                type="date"
+                                id="new-birth"
+                                name="dataNascimento">
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="new-sex">Sexo</label>
+
+                        <select id="new-sex" name="sexo">
+
+                            <option value="">Selecione</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Feminino">Feminino</option>
+                            <option value="Outro">Outro</option>
+                            <option value="Não informado">Não informado</option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="new-phone">Telefone</label>
+
+                        <input
+                                type="tel"
+                                id="new-phone"
+                                name="telefone"
+                                placeholder="(00) 00000-0000">
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="new-email">E-mail</label>
+
+                    <input
+                            type="email"
+                            id="new-email"
+                            name="email"
+                            placeholder="paciente@email.com"
+                            maxlength="160">
+
+                </div>
+
+
+                <!-- ENDEREÇO -->
+                <h3>Endereço</h3>
+
+                <div class="form-group">
+
+                    <label for="new-street">Rua e número</label>
+
+                    <input
+                            type="text"
+                            id="new-street"
+                            name="endereco"
+                            placeholder="Rua, número e complemento">
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+
+                        <label for="new-neighborhood">Bairro</label>
+
+                        <input
+                                type="text"
+                                id="new-neighborhood"
+                                name="bairro">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="new-city">Cidade</label>
+
+                        <input
+                                type="text"
+                                id="new-city"
+                                name="cidade">
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="new-cep">CEP</label>
+
+                    <input
+                            type="text"
+                            id="new-cep"
+                            name="cep"
+                            placeholder="00000-000">
+
+                </div>
+
+
+                <!-- AÇÕES -->
+                <div class="form-actions">
+
+                    <a class="secondary-button" href="#dashboard">
+                        Cancelar
+                    </a>
+
+                    <button class="primary-button" type="submit">
+                        Cadastrar paciente
+                    </button>
+
+                </div>
+
+            </form>
+
         </div>
 
     </div>
+
 </section>
+
 
 <!-- MODAL: MÓDULOS EM DESENVOLVIMENTO -->
 <section class="modal-screen" id="module-notice">
 
-    <a class="modal-backdrop" href="#dashboard" aria-label="Fechar"></a>
+    <a class="modal-backdrop"
+       href="#dashboard"
+       aria-label="Fechar"></a>
 
     <div class="modal-card modal-small">
 
         <header class="modal-header">
+
             <h2>Módulo em desenvolvimento</h2>
+
             <a class="close-modal" href="#dashboard">×</a>
+
         </header>
 
         <div class="modal-body">
-            <p>Esta funcionalidade será implementada nas próximas etapas do MedCare.</p>
-            <a class="primary-button" href="#dashboard">Voltar</a>
+
+            <p>
+                Esta funcionalidade será implementada nas próximas etapas
+                do MedCare.
+            </p>
+
+            <a class="primary-button" href="#dashboard">
+                Voltar
+            </a>
+
         </div>
 
     </div>
+
 </section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const campoBusca = document.getElementById("buscarPaciente");
+        const pacientes = document.querySelectorAll(".patient-item");
+
+        if (!campoBusca) return;
+
+        campoBusca.addEventListener("input", function () {
+            const termo = this.value
+                .toLowerCase()
+                .trim();
+
+            pacientes.forEach(function (item) {
+                const conteudo = item.textContent.toLowerCase();
+
+                item.style.display = conteudo.includes(termo)
+                    ? ""
+                    : "none";
+            });
+        });
+    });
+</script>
 
 </body>
 </html>

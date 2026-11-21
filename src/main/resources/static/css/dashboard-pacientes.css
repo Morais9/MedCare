@@ -664,7 +664,8 @@ button {
 
 .patient-item:hover,
 .patient-item.selected {
-    background: #f4f8f5;
+    background: #eaf4ef;
+    border-color: #315f4e;
 }
 
 .patient-avatar {
@@ -1356,5 +1357,24 @@ button {
         top: 70px;
         right: 10px;
         width: min(300px, calc(100vw - 90px));
+    }
+
+    .alert {
+        padding: 14px 18px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    .alert-success {
+        color: #285442;
+        background: #e8f5ed;
+        border: 1px solid #b8dfc5;
+    }
+
+    .alert-error {
+        color: #9b3030;
+        background: #fcecec;
+        border: 1px solid #efc1c1;
     }
 }

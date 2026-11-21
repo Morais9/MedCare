@@ -4,6 +4,7 @@ package com.medcare.controller;
 import com.medcare.model.Usuario;
 import com.medcare.repository.UsuarioRepository;
 import com.medcare.service.UsuarioService;
+import com.medcare.service.PacienteService;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -15,13 +16,16 @@ public class HomeController {
 
     private final UsuarioService usuarioService;
     private final UsuarioRepository usuarioRepository;
+    private final PacienteService pacienteService;
 
     public HomeController(
             UsuarioService usuarioService,
-            UsuarioRepository usuarioRepository) {
+            UsuarioRepository usuarioRepository,
+            PacienteService pacienteService) {
 
         this.usuarioService = usuarioService;
         this.usuarioRepository = usuarioRepository;
+        this.pacienteService = pacienteService;
     }
 
     @GetMapping({"/", "/index", "/login"})
@@ -43,36 +47,45 @@ public class HomeController {
     @GetMapping("/dashboard")
     public String dashboard(
             Authentication authentication,
-            Model model) {
+            Model model,
+            @RequestParam(value = "pacienteId", required = false)
+            Long pacienteId) {
 
         Usuario usuario = usuarioRepository
                 .findByEmail(authentication.getName())
                 .orElseThrow(() ->
                         new IllegalStateException("Usuário não encontrado."));
 
-        model.addAttribute("usuarioLogado", usuario);
-        model.addAttribute("nomeUsuario", usuario.getNome());
-        model.addAttribute("cargoUsuario", usuario.getCargo());
+        adicionarDadosUsuario(model, usuario);
 
-        String nome = usuario.getNome() == null
-                ? "U"
-                : usuario.getNome().trim();
+        var pacientes = pacienteService.listarTodos();
 
-        String[] partes = nome.split("\\s+");
+        model.addAttribute("pacientes", pacientes);
+        model.addAttribute("totalPacientes", pacientes.size());
 
-        String iniciais = partes.length > 1
-                ? partes[0].substring(0, 1) +
-                partes[partes.length - 1].substring(0, 1)
-                : nome.substring(0, 1);
+        // Carrega o paciente selecionado
+        if (pacienteId != null) {
 
-        model.addAttribute("iniciaisUsuario", iniciais.toUpperCase());
+            var pacienteSelecionado =
+                    pacienteService.buscarPorId(pacienteId);
+
+            model.addAttribute(
+                    "pacienteSelecionado",
+                    pacienteSelecionado.orElse(null)
+            );
+
+        } else {
+            model.addAttribute("pacienteSelecionado", null);
+        }
 
         return "dashboard";
     }
 
     @GetMapping("/cadastro")
     public String cadastro(Model model) {
+
         model.addAttribute("usuario", new Usuario());
+
         return "cadastro";
     }
 
@@ -83,12 +96,16 @@ public class HomeController {
             Model model) {
 
         try {
+
             usuarioService.cadastrar(usuario, confirmarSenha);
+
             return "redirect:/index?cadastroSucesso=true";
 
         } catch (IllegalArgumentException e) {
+
             model.addAttribute("erro", e.getMessage());
             model.addAttribute("usuario", usuario);
+
             return "cadastro";
         }
     }
@@ -103,26 +120,28 @@ public class HomeController {
                 .orElseThrow(() ->
                         new IllegalStateException("Usuário não encontrado."));
 
-        // Disponibiliza o usuário completo para o Thymeleaf
-        model.addAttribute("usuarioLogado", usuario);
+        adicionarDadosUsuario(model, usuario);
 
+        return "agendamentos";
+    }
+
+    private void adicionarDadosUsuario(Model model, Usuario usuario) {
+
+        model.addAttribute("usuarioLogado", usuario);
         model.addAttribute("nomeUsuario", usuario.getNome());
         model.addAttribute("cargoUsuario", usuario.getCargo());
 
-        // Gera as iniciais do usuário
         String nome = usuario.getNome() == null
                 ? "U"
                 : usuario.getNome().trim();
 
-        String[] nomes = nome.split("\\s+");
+        String[] partes = nome.split("\\s+");
 
-        String iniciais = nomes.length > 1
-                ? nomes[0].substring(0, 1)
-                + nomes[nomes.length - 1].substring(0, 1)
+        String iniciais = partes.length > 1
+                ? partes[0].substring(0, 1)
+                + partes[partes.length - 1].substring(0, 1)
                 : nome.substring(0, 1);
 
         model.addAttribute("iniciaisUsuario", iniciais.toUpperCase());
-
-        return "agendamentos";
     }
 }
