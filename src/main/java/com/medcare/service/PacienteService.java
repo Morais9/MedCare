@@ -7,8 +7,10 @@ import com.medcare.repository.PacienteRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
 
 @Service
 public class PacienteService {
@@ -42,26 +44,26 @@ public class PacienteService {
                 .findByNomeContainingIgnoreCaseOrCpfContaining(busca, busca);
     }
 
-    // Cadastra um novo paciente
-    @Transactional
-    public Paciente cadastrar(Paciente paciente) {
+    
+   // Cadastra um novo paciente
+@Transactional
+public Paciente cadastrar(Paciente paciente) {
 
-        validarPaciente(paciente);
+    validarPaciente(paciente);
 
-        String cpf = normalizarCpf(paciente.getCpf());
+    String cpf = normalizarCpf(paciente.getCpf());
 
-        if (pacienteRepository.existsByCpf(cpf)) {
-            throw new IllegalArgumentException(
-                    "Já existe um paciente cadastrado com este CPF."
-            );
-        }
-
-        paciente.setId(null);
-        paciente.setCpf(cpf);
-
-        return pacienteRepository.save(paciente);
+    if (pacienteRepository.existsByCpf(cpf)) {
+        throw new IllegalArgumentException(
+                "Já existe um paciente cadastrado com este CPF."
+        );
     }
 
+    paciente.setId(null);
+    paciente.setCpf(cpf);
+
+    return pacienteRepository.save(paciente);
+}
     // Atualiza os dados de um paciente
     @Transactional
     public Paciente atualizar(Long id, Paciente dados) {
@@ -111,37 +113,72 @@ public class PacienteService {
         pacienteRepository.deleteById(id);
     }
 
-    // Valida os dados obrigatórios
-    private void validarPaciente(Paciente paciente) {
+   
+  // Valida os dados do paciente
+private void validarPaciente(Paciente paciente) {
 
-        if (paciente == null) {
-            throw new IllegalArgumentException(
-                    "Os dados do paciente não foram informados."
-            );
-        }
-
-        if (paciente.getNome() == null || paciente.getNome().trim().isEmpty()) {
-            throw new IllegalArgumentException(
-                    "O nome do paciente é obrigatório."
-            );
-        }
-
-        if (paciente.getCpf() == null || paciente.getCpf().trim().isEmpty()) {
-            throw new IllegalArgumentException(
-                    "O CPF do paciente é obrigatório."
-            );
-        }
-
-        String cpf = normalizarCpf(paciente.getCpf());
-
-        if (!validarCPF(cpf)) {
-            throw new IllegalArgumentException(
-                    "CPF inválido. Verifique os números informados."
-            );
-        }
-
-        paciente.setNome(paciente.getNome().trim());
+    if (paciente == null) {
+        throw new IllegalArgumentException(
+                "Os dados do paciente não foram informados."
+        );
     }
+
+    // Nome: obrigatório, com nome e sobrenome
+    if (paciente.getNome() == null || paciente.getNome().trim().isEmpty()) {
+        throw new IllegalArgumentException(
+                "O nome do paciente é obrigatório."
+        );
+    }
+
+    paciente.setNome(paciente.getNome().trim());
+
+    if (paciente.getNome().split("\\s+").length < 2) {
+        throw new IllegalArgumentException(
+                "Informe nome e sobrenome."
+        );
+    }
+
+    // CPF: obrigatório e válido
+    if (paciente.getCpf() == null || paciente.getCpf().trim().isEmpty()) {
+        throw new IllegalArgumentException(
+                "O CPF do paciente é obrigatório."
+        );
+    }
+
+    if (!validarCPF(normalizarCpf(paciente.getCpf()))) {
+        throw new IllegalArgumentException(
+                "CPF inválido. Verifique os números informados."
+        );
+    }
+
+    // Data de nascimento: obrigatória e não pode ser futura
+    if (paciente.getDataNascimento() == null) {
+        throw new IllegalArgumentException(
+                "A data de nascimento é obrigatória."
+        );
+    }
+
+    if (paciente.getDataNascimento().isAfter(LocalDate.now())) {
+        throw new IllegalArgumentException(
+                "A data de nascimento não pode ser futura."
+        );
+    }
+
+    // CEP: opcional, mas se informado precisa ter 8 dígitos
+    if (paciente.getCep() != null && !paciente.getCep().isBlank()) {
+        String cep = paciente.getCep().replaceAll("\\D", "");
+
+        if (cep.length() != 8) {
+            throw new IllegalArgumentException(
+                    "CEP inválido."
+            );
+        }
+
+        paciente.setCep(cep);
+    }
+}
+
+    
 
     // Valida os dígitos verificadores do CPF
     private boolean validarCPF(String cpf) {
