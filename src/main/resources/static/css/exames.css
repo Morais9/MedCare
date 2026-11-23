@@ -1,0 +1,2199 @@
+
+/* =====================================================
+   MEDCARE — EXAMES
+   Identidade visual baseada na tela de Pacientes
+===================================================== */
+
+
+/* =====================================================
+   1. VARIÁVEIS
+===================================================== */
+
+:root {
+    --primary: #315f4e;
+    --primary-dark: #254b3d;
+    --primary-light: #eaf2ee;
+
+    --background: #f5f7f6;
+    --surface: #ffffff;
+
+    --text: #263a32;
+    --muted: #84918a;
+
+    --border: #e7ece9;
+
+    --success: #31845f;
+    --warning: #b7791f;
+    --info: #3975a8;
+    --danger: #b94b4b;
+
+    --sidebar-width: 255px;
+
+    --shadow-sm: 0 2px 8px rgba(35, 60, 48, 0.04);
+    --shadow-md: 0 8px 24px rgba(35, 60, 48, 0.08);
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+}
+
+
+/* =====================================================
+   2. RESET E CONFIGURAÇÕES GERAIS
+===================================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--background);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    overflow-x: hidden;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button:disabled,
+input:disabled,
+textarea:disabled,
+select:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+
+/* =====================================================
+   3. ESTRUTURA PRINCIPAL
+===================================================== */
+
+.app {
+    min-height: 100vh;
+    width: 100%;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    height: 100vh;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 28px 18px 20px;
+
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+
+    z-index: 100;
+}
+
+.main-panel {
+    min-height: 100vh;
+    margin-left: var(--sidebar-width);
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* =====================================================
+   4. LOGO
+===================================================== */
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    margin-bottom: 43px;
+    padding-left: 5px;
+
+    color: var(--text);
+
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+.brand:hover {
+    color: var(--text);
+}
+
+.brand-icon {
+    width: 37px;
+    height: 37px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: var(--primary);
+    color: white;
+
+    font-size: 27px;
+    font-weight: 500;
+}
+
+.brand-highlight {
+    color: var(--primary);
+}
+
+
+/* =====================================================
+   5. MENU LATERAL
+===================================================== */
+
+.menu-label {
+    margin: 0 0 13px 10px;
+
+    color: #a0aaa4;
+
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.1px;
+}
+
+.sidebar-secondary-label {
+    margin-top: 30px;
+}
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.nav-item {
+    min-height: 45px;
+
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    padding: 0 13px;
+
+    border-radius: 9px;
+
+    color: #718078;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+    background: #f4f7f5;
+    color: var(--primary);
+}
+
+.nav-item.active {
+    background: var(--primary-light);
+    color: var(--primary);
+    font-weight: 700;
+}
+
+.nav-icon {
+    width: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 18px;
+}
+
+
+/* =====================================================
+   6. USUÁRIO E LOGOUT DA SIDEBAR
+===================================================== */
+
+.sidebar-bottom {
+    margin-top: auto;
+    padding-top: 20px;
+
+    border-top: 1px solid var(--border);
+}
+
+.sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    margin-bottom: 17px;
+    padding: 0 5px;
+}
+
+.avatar {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: var(--primary-light);
+    color: var(--primary);
+
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.sidebar-user-info {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.sidebar-user-info strong {
+    overflow: hidden;
+
+    color: var(--text);
+
+    font-size: 12px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.sidebar-user-info span {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.sidebar-bottom form {
+    width: 100%;
+}
+
+.logout-button {
+    width: 100%;
+    height: 39px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 0 12px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: transparent;
+    color: #78857e;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    transition: all 0.2s ease;
+}
+
+.logout-button:hover {
+    background: #fff1f1;
+    color: var(--danger);
+}
+
+
+/* =====================================================
+   7. TOPBAR
+===================================================== */
+
+.topbar {
+    height: 76px;
+    min-height: 76px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 42px;
+
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+
+    position: relative;
+    z-index: 90;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    color: #9aa59f;
+    font-size: 12px;
+}
+
+.breadcrumb strong {
+    color: var(--text);
+    font-weight: 700;
+}
+
+.breadcrumb-separator {
+    color: #c2cbc6;
+}
+
+
+/* =====================================================
+   8. AÇÕES DA TOPBAR
+===================================================== */
+
+.topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 21px;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown summary {
+    list-style: none;
+    cursor: pointer;
+}
+
+.dropdown summary::-webkit-details-marker {
+    display: none;
+}
+
+
+/* Notificações */
+
+.notification-button {
+    width: 38px;
+    height: 38px;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--border);
+    border-radius: 50%;
+
+    background: white;
+    color: #64736b;
+
+    transition: all 0.2s ease;
+}
+
+.notification-button:hover {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.notification-icon {
+    font-size: 19px;
+}
+
+.notification-dot {
+    width: 7px;
+    height: 7px;
+
+    position: absolute;
+    top: 7px;
+    right: 7px;
+
+    border: 1px solid white;
+    border-radius: 50%;
+
+    background: var(--danger);
+}
+
+
+/* Perfil */
+
+.profile-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-avatar {
+    width: 36px;
+    height: 36px;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.profile-info strong {
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.profile-info span {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.profile-chevron {
+    margin-left: 4px;
+    color: #84918a;
+    font-size: 17px;
+}
+
+
+/* =====================================================
+   9. DROPDOWNS
+===================================================== */
+
+.dropdown-panel {
+    width: 280px;
+
+    position: absolute;
+    top: calc(100% + 15px);
+    right: 0;
+
+    padding: 17px;
+
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+
+    box-shadow: var(--shadow-md);
+
+    z-index: 200;
+}
+
+.dropdown-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    padding-bottom: 13px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.dropdown-heading strong {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.dropdown-heading span {
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.notification-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 25px 10px 12px;
+
+    text-align: center;
+}
+
+.notification-empty-icon {
+    margin-bottom: 10px;
+    color: #9ba9a1;
+    font-size: 27px;
+}
+
+.notification-empty strong {
+    font-size: 12px;
+}
+
+.notification-empty p {
+    margin-top: 5px;
+
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.profile-panel {
+    width: 250px;
+    padding: 10px;
+}
+
+.profile-panel-user {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    padding: 11px;
+}
+
+.profile-panel-user strong {
+    font-size: 13px;
+}
+
+.profile-panel-user span {
+    overflow: hidden;
+
+    color: var(--muted);
+    font-size: 11px;
+    text-overflow: ellipsis;
+}
+
+.dropdown-divider {
+    height: 1px;
+    margin: 5px 0;
+
+    background: var(--border);
+}
+
+.dropdown-option {
+    width: 100%;
+    min-height: 38px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 0 11px;
+
+    border: none;
+    border-radius: 7px;
+
+    background: transparent;
+    color: #64736b;
+
+    font-size: 12px;
+    text-align: left;
+}
+
+.dropdown-option:hover {
+    background: #f4f7f5;
+    color: var(--primary);
+}
+
+.dropdown-option span {
+    width: 17px;
+    font-size: 15px;
+}
+
+.logout-option {
+    color: var(--danger);
+}
+
+
+/* =====================================================
+   10. CONTEÚDO DA PÁGINA
+===================================================== */
+
+.dashboard-content {
+    width: 100%;
+    max-width: 1500px;
+
+    margin: 0 auto;
+    padding: 38px 42px 50px;
+}
+
+
+/* =====================================================
+   11. CABEÇALHO DA PÁGINA
+===================================================== */
+
+.page-heading {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    margin-bottom: 29px;
+}
+
+.heading-icon {
+    width: 49px;
+    height: 49px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: var(--primary-light);
+    color: var(--primary);
+
+    font-size: 23px;
+}
+
+.page-heading h1 {
+    margin: 0 0 4px;
+
+    color: var(--text);
+
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: -0.7px;
+}
+
+.page-heading p {
+    margin: 0;
+
+    color: var(--muted);
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   12. BARRA DE FERRAMENTAS
+===================================================== */
+
+.exam-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+
+    margin-bottom: 22px;
+}
+
+.search-field {
+    width: 100%;
+    max-width: 480px;
+    height: 43px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 0 14px;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    background: white;
+
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-field:focus-within {
+    border-color: #9bbbad;
+    box-shadow: 0 0 0 3px rgba(49, 95, 78, 0.07);
+}
+
+.search-icon {
+    color: #91a097;
+    font-size: 23px;
+    line-height: 1;
+}
+
+.search-field input {
+    width: 100%;
+    height: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+    color: var(--text);
+
+    font-size: 12px;
+}
+
+.search-field input::placeholder {
+    color: #a1aca5;
+}
+
+
+/* =====================================================
+   13. BOTÕES
+===================================================== */
+
+.primary-button,
+.secondary-button,
+.danger-button {
+    min-height: 41px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    padding: 0 17px;
+
+    border: 1px solid transparent;
+    border-radius: 8px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    transition: all 0.2s ease;
+}
+
+.primary-button {
+    background: var(--primary);
+    color: white;
+}
+
+.primary-button:hover:not(:disabled) {
+    background: var(--primary-dark);
+    color: white;
+
+    box-shadow: 0 4px 10px rgba(49, 95, 78, 0.16);
+}
+
+.primary-button:disabled {
+    background: #9aa9a1;
+}
+
+.button-plus {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1;
+}
+
+.secondary-button {
+    border-color: var(--border);
+    background: white;
+    color: #64736b;
+}
+
+.secondary-button:hover:not(:disabled) {
+    border-color: #b8c9bf;
+    background: #f7faf8;
+    color: var(--primary);
+}
+
+.danger-button {
+    border-color: #f0d6d6;
+    background: #fff5f5;
+    color: var(--danger);
+}
+
+.danger-button:hover {
+    background: #ffeaea;
+}
+
+
+/* =====================================================
+   14. PAINEL DA TABELA
+===================================================== */
+
+.panel-card {
+    overflow: hidden;
+
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 13px;
+
+    box-shadow: var(--shadow-sm);
+}
+
+.panel-heading {
+    min-height: 85px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+
+    padding: 20px 24px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.panel-heading h2 {
+    margin: 0 0 5px;
+
+    color: var(--text);
+
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.panel-heading p {
+    margin: 0;
+
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.total-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+
+    padding: 7px 11px;
+
+    border-radius: 20px;
+
+    background: var(--primary-light);
+    color: var(--primary);
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   15. ABAS
+===================================================== */
+
+.exam-tabs {
+    min-height: 53px;
+
+    display: flex;
+    align-items: stretch;
+    gap: 25px;
+
+    padding: 0 24px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.exam-tab {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 0 2px;
+
+    border: none;
+    background: transparent;
+
+    color: #84918a;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    transition: color 0.2s ease;
+}
+
+.exam-tab:hover {
+    color: var(--primary);
+}
+
+.exam-tab.active {
+    color: var(--primary);
+    font-weight: 800;
+}
+
+.exam-tab.active::after {
+    content: "";
+
+    height: 2px;
+
+    position: absolute;
+    right: 0;
+    bottom: -1px;
+    left: 0;
+
+    background: var(--primary);
+    border-radius: 3px 3px 0 0;
+}
+
+.tab-count {
+    min-width: 20px;
+    height: 20px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 5px;
+
+    border-radius: 20px;
+
+    background: #f0f3f1;
+    color: #75847b;
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.exam-tab.active .tab-count {
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+
+/* =====================================================
+   16. TABELA
+===================================================== */
+
+.exam-table-wrapper {
+    width: 100%;
+}
+
+.exam-table {
+    width: 100%;
+    min-width: 850px;
+
+    border-collapse: collapse;
+}
+
+.exam-table thead {
+    background: #fafcfb;
+}
+
+.exam-table th {
+    height: 44px;
+
+    padding: 0 17px;
+
+    border-bottom: 1px solid var(--border);
+
+    color: #9aa69f;
+
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.65px;
+
+    text-align: left;
+    white-space: nowrap;
+}
+
+.exam-table td {
+    height: 72px;
+
+    padding: 11px 17px;
+
+    border-bottom: 1px solid #f0f3f1;
+
+    color: var(--text);
+
+    font-size: 12px;
+    vertical-align: middle;
+}
+
+.exam-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.exam-row {
+    cursor: pointer;
+    transition: background 0.18s ease;
+}
+
+.exam-row:hover {
+    background: #f8fbf9;
+}
+
+.exam-row:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+}
+
+.table-date {
+    display: block;
+
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.table-time {
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--muted);
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   17. PACIENTE NA TABELA
+===================================================== */
+
+.table-person {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.table-avatar {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #edf3ef;
+    color: var(--primary);
+
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.table-person div:last-child {
+    min-width: 0;
+}
+
+.table-person strong {
+    display: block;
+
+    max-width: 190px;
+    overflow: hidden;
+
+    color: var(--text);
+
+    font-size: 11px;
+    font-weight: 700;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.table-person span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--muted);
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   18. INFORMAÇÕES DO EXAME
+===================================================== */
+
+.exam-name {
+    display: block;
+
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.exam-description {
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.doctor-name {
+    color: #64736b;
+    font-size: 11px;
+}
+
+
+/* =====================================================
+   19. STATUS
+===================================================== */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 5px 9px;
+
+    border-radius: 20px;
+
+    background: #f0f3f1;
+    color: #718078;
+
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.status-pendente {
+    background: #fff5e6;
+    color: #a56d1c;
+}
+
+.status-realizado {
+    background: #eaf5ee;
+    color: #31845f;
+}
+
+.status-cancelado {
+    background: #fff0f0;
+    color: #b94b4b;
+}
+
+.report-status {
+    display: block;
+
+    margin-top: 5px;
+
+    color: #84918a;
+    font-size: 9px;
+}
+
+.row-action {
+    color: #9eaaa3;
+    font-size: 22px;
+    transition: color 0.2s ease;
+}
+
+.exam-row:hover .row-action {
+    color: var(--primary);
+}
+
+
+/* =====================================================
+   20. ESTADO VAZIO
+===================================================== */
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 55px 20px;
+
+    text-align: center;
+}
+
+.empty-state-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 13px;
+
+    border-radius: 50%;
+
+    background: var(--primary-light);
+    color: var(--primary);
+
+    font-size: 23px;
+}
+
+.empty-state strong {
+    color: var(--text);
+    font-size: 13px;
+}
+
+.empty-state p {
+    margin: 6px 0 0;
+
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.filtered-empty {
+    padding: 35px 20px;
+}
+
+
+/* =====================================================
+   21. MODAIS BOOTSTRAP
+===================================================== */
+
+.modal-backdrop {
+    background: #17251e;
+}
+
+.modal-backdrop.show {
+    opacity: 0.48;
+}
+
+.exam-modal {
+    overflow: hidden;
+
+    border: none;
+    border-radius: 15px;
+
+    background: white;
+
+    box-shadow: 0 18px 55px rgba(20, 40, 30, 0.18);
+}
+
+.modal-dialog {
+    padding: 10px;
+}
+
+.exam-modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    padding: 23px 26px 20px;
+
+    border-bottom: 1px solid var(--border);
+
+    background: #fff;
+}
+
+.exam-modal-header .modal-title {
+    margin: 5px 0 5px;
+
+    color: var(--text);
+
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.exam-modal-header p {
+    margin: 0;
+
+    color: var(--muted);
+    font-size: 11px;
+}
+
+.modal-eyebrow {
+    color: var(--primary);
+
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.exam-modal-header .btn-close {
+    margin: 0;
+    padding: 7px;
+
+    opacity: 0.5;
+}
+
+.exam-modal-body {
+    max-height: 70vh;
+    overflow-y: auto;
+
+    padding: 24px 26px;
+}
+
+.exam-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 9px;
+
+    padding: 15px 26px;
+
+    border-top: 1px solid var(--border);
+}
+
+
+/* =====================================================
+   22. FORMULÁRIOS
+===================================================== */
+
+.form-section-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    margin-bottom: 20px;
+
+    color: var(--text);
+
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.form-section-title span {
+    width: 24px;
+    height: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 7px;
+
+    background: var(--primary-light);
+    color: var(--primary);
+
+    font-size: 10px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    margin-bottom: 17px;
+}
+
+.form-field label {
+    color: #53645a;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+    width: 100%;
+
+    padding: 11px 12px;
+
+    border: 1px solid #e0e8e3;
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #fff;
+    color: var(--text);
+
+    font-size: 12px;
+
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-field input,
+.form-field select {
+    min-height: 42px;
+}
+
+.form-field textarea {
+    min-height: 100px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+    border-color: #8eae9e;
+    box-shadow: 0 0 0 3px rgba(49, 95, 78, 0.07);
+}
+
+.form-field input::placeholder,
+.form-field textarea::placeholder {
+    color: #a6b0aa;
+}
+
+.form-field small {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.required-note {
+    margin: 0;
+
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+
+    margin-top: 10px;
+}
+
+
+/* =====================================================
+   23. RESUMO DOS DETALHES
+===================================================== */
+
+.detail-summary {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 13px;
+
+    margin-bottom: 23px;
+    padding: 17px;
+
+    border: 1px solid #e1ebe5;
+    border-radius: 11px;
+
+    background: #f7faf8;
+}
+
+.detail-summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    min-width: 0;
+}
+
+.detail-summary-item span {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.detail-summary-item strong {
+    overflow: hidden;
+
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 800;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   24. SEÇÕES DE DETALHES
+===================================================== */
+
+.detail-section {
+    padding: 20px 0;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.detail-section:last-child {
+    border-bottom: none;
+}
+
+.detail-section-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin-bottom: 17px;
+}
+
+.detail-section-icon {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: var(--primary-light);
+    color: var(--primary);
+
+    font-size: 15px;
+}
+
+.detail-section-heading h6 {
+    margin: 0;
+
+    color: var(--text);
+
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 17px 24px;
+}
+
+.detail-field {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.detail-field span,
+.detail-description > span {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.detail-field strong {
+    overflow-wrap: anywhere;
+
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.detail-description {
+    margin-top: 18px;
+    padding: 13px;
+
+    border-radius: 8px;
+
+    background: #f7faf8;
+}
+
+.detail-description p {
+    margin: 7px 0 0;
+
+    color: #64736b;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+
+/* =====================================================
+   25. UPLOAD DE ARQUIVOS
+===================================================== */
+
+.upload-area {
+    position: relative;
+
+    border: 1px dashed #b9cbbf;
+    border-radius: 10px;
+
+    background: #f8fbf9;
+
+    transition: all 0.2s ease;
+}
+
+.upload-area:hover {
+    border-color: var(--primary);
+    background: #f1f7f3;
+}
+
+.upload-area label {
+    min-height: 115px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    padding: 15px;
+
+    cursor: pointer;
+    text-align: center;
+}
+
+.upload-icon {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: var(--primary-light);
+    color: var(--primary);
+
+    font-size: 19px;
+}
+
+.upload-area strong {
+    color: var(--primary);
+    font-size: 11px;
+}
+
+.upload-area label > span:last-child {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.upload-area input[type="file"] {
+    width: 100%;
+    padding: 0 12px 12px;
+
+    color: var(--muted);
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   26. LISTA DE ANEXOS
+===================================================== */
+
+.attachment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+
+    margin-top: 15px;
+}
+
+.attachment-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    padding: 11px 13px;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    background: white;
+}
+
+.attachment-info {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.attachment-icon {
+    width: 33px;
+    height: 33px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: var(--primary-light);
+    color: var(--primary);
+
+    font-size: 16px;
+}
+
+.attachment-info div {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.attachment-info strong {
+    overflow: hidden;
+
+    color: var(--text);
+    font-size: 11px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.attachment-info span:last-child {
+    color: var(--muted);
+    font-size: 9px;
+}
+
+.attachment-download {
+    flex-shrink: 0;
+
+    color: var(--primary);
+
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.attachment-download:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+.empty-inline {
+    margin: 13px 0 0;
+
+    color: var(--muted);
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   27. STATUS DO LAUDO
+===================================================== */
+
+.report-status-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+
+    margin-bottom: 17px;
+    padding: 14px;
+
+    border: 1px solid var(--border);
+    border-radius: 9px;
+
+    background: #fafcfb;
+}
+
+.report-status-card > div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.report-status-card span {
+    color: var(--muted);
+    font-size: 10px;
+}
+
+.report-status-card strong {
+    color: var(--primary);
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.issued-report {
+    margin-top: 17px;
+    padding: 15px;
+
+    border: 1px solid #dcebe1;
+    border-radius: 9px;
+
+    background: #f4faf6;
+}
+
+.issued-report > span {
+    color: var(--success);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.issued-report p {
+    margin: 10px 0;
+
+    color: #53645a;
+    font-size: 11px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+}
+
+.issued-report small {
+    color: var(--muted);
+    font-size: 9px;
+}
+
+
+/* =====================================================
+   28. HISTÓRICO
+===================================================== */
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+
+    padding-left: 5px;
+}
+
+.history-item {
+    position: relative;
+
+    display: flex;
+    gap: 13px;
+
+    padding-bottom: 19px;
+}
+
+.history-item:last-child {
+    padding-bottom: 0;
+}
+
+.history-marker {
+    width: 10px;
+    height: 10px;
+    flex-shrink: 0;
+
+    margin-top: 4px;
+
+    border: 2px solid white;
+    border-radius: 50%;
+
+    background: var(--primary);
+    box-shadow: 0 0 0 2px #d8e8de;
+}
+
+.history-item:not(:last-child)::before {
+    content: "";
+
+    width: 1px;
+
+    position: absolute;
+    top: 15px;
+    bottom: 0;
+    left: 4px;
+
+    background: #dce8e0;
+}
+
+.history-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.history-title-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.history-title-row strong {
+    color: var(--text);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.history-title-row span {
+    flex-shrink: 0;
+
+    color: var(--muted);
+    font-size: 9px;
+}
+
+.history-content p {
+    margin: 5px 0;
+
+    color: #718078;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.history-content small {
+    color: #9aa69f;
+    font-size: 9px;
+}
+
+
+/* =====================================================
+   29. CANCELAMENTO
+===================================================== */
+
+.cancel-exam-area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+
+    margin-top: 20px;
+    padding: 15px;
+
+    border: 1px solid #f1dddd;
+    border-radius: 9px;
+
+    background: #fffafa;
+}
+
+.cancel-exam-area strong {
+    color: #9e4444;
+    font-size: 11px;
+}
+
+.cancel-exam-area p {
+    margin: 5px 0 0;
+
+    color: #9b7777;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+
+/* =====================================================
+   30. SCROLLBAR
+===================================================== */
+
+.exam-modal-body::-webkit-scrollbar {
+    width: 6px;
+}
+
+.exam-modal-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.exam-modal-body::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #d8e2dc;
+}
+
+.exam-modal-body::-webkit-scrollbar-thumb:hover {
+    background: #b9cbbf;
+}
+
+
+/* =====================================================
+   31. RESPONSIVIDADE — 1100px
+===================================================== */
+
+@media (max-width: 1100px) {
+
+    .dashboard-content {
+        padding: 32px 27px 40px;
+    }
+
+    .topbar {
+        padding: 0 27px;
+    }
+
+    .detail-summary {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .detail-summary-item:first-child {
+        grid-column: 1 / -1;
+    }
+
+}
+
+
+/* =====================================================
+   32. RESPONSIVIDADE — 760px
+===================================================== */
+
+@media (max-width: 760px) {
+
+    :root {
+        --sidebar-width: 0px;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .main-panel {
+        margin-left: 0;
+    }
+
+    .topbar {
+        height: 65px;
+        min-height: 65px;
+
+        padding: 0 20px;
+    }
+
+    .dashboard-content {
+        padding: 27px 20px 35px;
+    }
+
+    .page-heading {
+        margin-bottom: 23px;
+    }
+
+    .page-heading h1 {
+        font-size: 22px;
+    }
+
+    .exam-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .search-field {
+        max-width: none;
+    }
+
+    .exam-toolbar .primary-button {
+        width: 100%;
+    }
+
+    .panel-heading {
+        padding: 17px;
+    }
+
+    .exam-tabs {
+        gap: 18px;
+        overflow-x: auto;
+
+        padding: 0 17px;
+    }
+
+    .exam-tab {
+        flex-shrink: 0;
+    }
+
+    .exam-table {
+        min-width: 800px;
+    }
+
+    .exam-modal-body {
+        max-height: 72vh;
+        padding: 19px;
+    }
+
+    .exam-modal-header {
+        padding: 20px;
+    }
+
+    .exam-modal-footer {
+        padding: 14px 20px;
+    }
+
+}
+
+
+/* =====================================================
+   33. RESPONSIVIDADE — 480px
+===================================================== */
+
+@media (max-width: 480px) {
+
+    .topbar {
+        padding: 0 14px;
+    }
+
+    .topbar-actions {
+        gap: 12px;
+    }
+
+    .profile-info {
+        display: none;
+    }
+
+    .profile-chevron {
+        display: none;
+    }
+
+    .dashboard-content {
+        padding: 23px 13px 30px;
+    }
+
+    .breadcrumb {
+        font-size: 11px;
+    }
+
+    .page-heading {
+        gap: 11px;
+    }
+
+    .heading-icon {
+        width: 43px;
+        height: 43px;
+    }
+
+    .page-heading h1 {
+        font-size: 20px;
+    }
+
+    .page-heading p {
+        font-size: 10px;
+    }
+
+    .panel-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .exam-tabs {
+        gap: 15px;
+    }
+
+    .exam-tab {
+        font-size: 11px;
+    }
+
+    .dropdown-panel {
+        position: fixed;
+        top: 60px;
+        right: 10px;
+
+        width: min(280px, calc(100vw - 20px));
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .detail-summary {
+        grid-template-columns: 1fr 1fr;
+        gap: 13px;
+    }
+
+    .detail-summary-item:first-child {
+        grid-column: 1 / -1;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+        gap: 13px;
+    }
+
+    .report-status-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .cancel-exam-area {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .cancel-exam-area form,
+    .cancel-exam-area button {
+        width: 100%;
+    }
+
+    .history-title-row {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .exam-modal-header .modal-title {
+        font-size: 17px;
+    }
+
+    .exam-modal-footer {
+        flex-wrap: wrap;
+    }
+
+    .exam-modal-footer button {
+        flex: 1;
+    }
+
+}
+
+
+/* =====================================================
+   34. ACESSIBILIDADE
+===================================================== */
+
+button:focus-visible,
+a:focus-visible,
+summary:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid #7da891;
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+    }
+
+}

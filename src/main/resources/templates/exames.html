@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#315f4e">
+
+    <title>MedCare - Exames</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/exames.css}">
+</head>
+
+<body th:attr="data-exame-para-abrir=${exameParaAbrir}">
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+
+        <div class="brand">
+            <div class="brand-icon">+</div>
+            <span>Med<span class="brand-highlight">Care</span></span>
+        </div>
+
+        <p class="menu-label">MENU PRINCIPAL</p>
+
+        <nav class="sidebar-nav">
+
+            <a class="nav-item" th:href="@{/pacientes}">
+                <span class="nav-icon">♧</span>
+                Pacientes
+            </a>
+
+            <a class="nav-item" th:href="@{/agendamentos}">
+                <span class="nav-icon">▦</span>
+                Agendamentos
+            </a>
+
+            <a class="nav-item" th:href="@{/consultas}">
+                <span class="nav-icon">▤</span>
+                Consultas
+            </a>
+
+            <a class="nav-item active" th:href="@{/exames}">
+                <span class="nav-icon">⊕</span>
+                Exames
+            </a>
+
+            <a class="nav-item" th:href="@{/dashboard}">
+                <span class="nav-icon">▥</span>
+                Dashboard
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="sidebar-user">
+                <div class="avatar"
+                     th:text="${usuarioLogado != null and usuarioLogado.nome != null and !usuarioLogado.nome.isEmpty() ? usuarioLogado.nome.substring(0, 1).toUpperCase() : 'U'}">
+                    U
+                </div>
+
+                <div class="sidebar-user-info">
+                    <strong th:text="${usuarioLogado.nome}">Usuário</strong>
+                    <span th:text="${usuarioLogado.cargo}">Profissional</span>
+                </div>
+            </div>
+
+            <form th:action="@{/logout}" method="post">
+                <button type="submit" class="logout-button">
+                    ↪ Sair
+                </button>
+            </form>
+        </div>
+
+
+    </aside>
+
+    <!-- CONTEÚDO -->
+    <main class="main-panel">
+
+        <!-- HEADER -->
+        <header class="topbar">
+
+            <div class="breadcrumb">
+                <span>MedCare</span>
+                <span class="breadcrumb-separator">/</span>
+                <strong>Exames</strong>
+            </div>
+
+            <div class="topbar-actions">
+
+                <button type="button"
+                        class="primary-button"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalSolicitarExame">
+                    <span class="button-plus">+</span>
+                    Solicitar exame
+                </button>
+
+                <div class="profile-button">
+
+                    <div class="avatar profile-avatar"
+                         th:text="${usuarioLogado != null and usuarioLogado.nome != null and !usuarioLogado.nome.isEmpty() ? usuarioLogado.nome.substring(0, 1).toUpperCase() : 'U'}">
+                        U
+                    </div>
+
+                    <div class="profile-info">
+                        <strong th:text="${usuarioLogado.nome}">Usuário</strong>
+                        <span th:text="${usuarioLogado.cargo}">Profissional</span>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+        <!-- TÍTULO DA PÁGINA -->
+        <div class="page-heading">
+
+            <div class="heading-icon">
+                <span>⊕</span>
+            </div>
+
+            <div>
+                <h1>Exames</h1>
+                <p>Gerencie solicitações, acompanhe resultados e consulte laudos.</p>
+            </div>
+
+        </div>
+
+        <!-- LISTAGEM -->
+        <section class="dashboard-content exam-list">
+
+            <!-- ABAS -->
+            <div class="exam-tabs tabs">
+                <button type="button"
+                        class="exam-tab active"
+                        data-filter="pendentes">
+                    Pendentes
+                    <span class="tab-count" id="contadorPendentes">0</span>
+                </button>
+
+                <button type="button"
+                        class="exam-tab"
+                        data-filter="realizados">
+                    Realizados
+                    <span class="tab-count" id="contadorRealizados">0</span>
+                </button>
+
+                <button type="button"
+                        class="exam-tab"
+                        data-filter="laudos">
+                    Laudos
+                    <span class="tab-count" id="contadorLaudos">0</span>
+                </button>
+
+                <button type="button"
+                        class="exam-tab"
+                        data-filter="todos">
+                    Todos
+                </button>
+            </div>
+
+            <!-- PESQUISA -->
+            <div class="search-field">
+                <span class="search-icon">⌕</span>
+                <input type="text"
+                       id="searchInput"
+                       placeholder="Buscar exame, paciente ou solicitante...">
+            </div>
+            <!-- TABELA -->
+            <div class="exam-table-wrapper table-responsive">
+
+                <table class="exam-table">
+
+                    <thead>
+                    <tr>
+                        <th>Data do pedido</th>
+                        <th>Paciente</th>
+                        <th>Exame</th>
+                        <th>Solicitante</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="tableBody">
+
+                    <tr th:each="exame : ${exames}"
+                        class="exam-row"
+                        th:attr="
+                            data-status=${exame.status},
+                            data-laudo=${exame.statusLaudo},
+                            data-paciente=${exame.consulta.agendamento.paciente.nome},
+                            data-cpf=${exame.consulta.agendamento.paciente.cpf},
+                            data-solicitante=${exame.consulta.agendamento.profissional.nome},
+                            data-exame=${exame.tipoExame}"
+                        th:onclick="|abrirDetalhes('modalDetalhe${exame.id}')|">
+
+                        <td th:text="${exame.dataSolicitacao}">Data</td>
+
+                        <td th:text="${exame.consulta.agendamento.paciente.nome}">
+                            Paciente
+                        </td>
+
+                        <td th:text="${exame.tipoExame}">
+                            Exame
+                        </td>
+
+                        <td th:text="${exame.consulta.agendamento.profissional.nome}">
+                            Solicitante
+                        </td>
+
+                        <td>
+                           <span class="status-badge"
+                                 th:classappend="${exame.status == 'Pendente' ? ' status-pendente' :
+                                 exame.status == 'Realizado' ? ' status-realizado' :
+                                 exame.status == 'Cancelado' ? ' status-cancelado' : ''}"
+                                 th:text="${exame.status}">
+                                 Pendente
+                           </span>
+                        </td>
+
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(exames)}">
+                        <td colspan="5" class="empty-message">
+                            Nenhum exame cadastrado até o momento.
+                        </td>
+                    </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- MODAL DE SOLICITAÇÃO -->
+<!-- ================================================= -->
+
+<div class="modal fade" id="modalSolicitarExame" tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content exam-modal">
+
+            <div class="modal-header exam-modal-header">
+
+                <div>
+                    <h5 class="modal-title">Solicitar exame</h5>
+                    <p>Preencha os dados da solicitação.</p>
+                </div>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body exam-modal-body">
+
+                <form id="formSolicitarExame"
+                      method="post"
+                      th:action="@{/exames/solicitar/0}">
+
+                    <div class="form-field">
+
+                        <label for="consultaId">Consulta relacionada</label>
+
+                        <select id="consultaId"
+                                class="form-control"
+                                required>
+
+                            <option value="">Selecione uma consulta</option>
+
+                            <option th:each="consulta : ${consultas}"
+                                    th:value="${consulta.id}"
+                                    th:text="${consulta.agendamento.paciente.nome + ' - Consulta #' + consulta.id}">
+                                Paciente
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="tipoExame">Tipo de exame</label>
+
+                        <input type="text"
+                               id="tipoExame"
+                               name="tipoExame"
+                               class="form-control"
+                               placeholder="Ex.: Hemograma, Raio-X..."
+                               maxlength="120"
+                               required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="descricao">Descrição</label>
+
+                        <textarea id="descricao"
+                                  name="descricao"
+                                  class="form-control"
+                                  placeholder="Descreva os detalhes da solicitação..."></textarea>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="convenio">Convênio</label>
+
+                        <input type="text"
+                               id="convenio"
+                               name="convenio"
+                               class="form-control"
+                               placeholder="Ex.: SUS, Unimed..."
+                               maxlength="100">
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="prioridade">Prioridade</label>
+
+                        <select id="prioridade"
+                                name="prioridade"
+                                class="form-control"
+                                required>
+
+                            <option value="Normal">Normal</option>
+                            <option value="Urgente">Urgente</option>
+                            <option value="Emergencial">Emergencial</option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="exam-modal-footer modal-actions">
+
+                        <button type="button"
+                                class="btn-outline"
+                                data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+
+                        <button type="submit"
+                                class="btn-primary">
+                            Solicitar exame
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- MODAIS DE DETALHES DOS EXAMES -->
+<!-- ================================================= -->
+
+<div th:each="exame : ${exames}"
+     th:id="|modalDetalhe${exame.id}|"
+     class="modal fade"
+     tabindex="-1">
+
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+
+        <div class="modal-content exam-modal">
+
+            <div class="modal-header exam-modal-header">
+
+                <div>
+                    <h5 class="modal-title">Detalhes do exame</h5>
+                    <p th:text="${exame.tipoExame}">Exame</p>
+                </div>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body exam-modal-body">
+
+                <!-- PACIENTE -->
+                <div class="detail-summary">
+
+                    <div class="avatar"
+                         th:text="${exame.consulta.agendamento.paciente.nome != null and !exame.consulta.agendamento.paciente.nome.isEmpty() ? exame.consulta.agendamento.paciente.nome.substring(0, 1).toUpperCase() : 'P'}">
+                        P
+                    </div>
+
+                    <div>
+
+                        <h3 th:text="${exame.consulta.agendamento.paciente.nome}">
+                            Paciente
+                        </h3>
+
+                        <small>
+                            CPF:
+                            <span th:text="${exame.consulta.agendamento.paciente.cpf}">
+                                CPF
+                            </span>
+                        </small>
+
+                    </div>
+
+                </div>
+
+                <!-- INFORMAÇÕES -->
+                <div class="detail-grid">
+
+                    <div class="detail-field">
+                        <strong>Exame</strong>
+                        <p th:text="${exame.tipoExame}">Exame</p>
+                    </div>
+
+                    <div class="detail-field">
+                        <strong>Convênio</strong>
+                        <p th:text="${exame.convenio != null and !exame.convenio.isBlank() ? exame.convenio : 'Não informado'}">
+                            Convênio
+                        </p>
+                    </div>
+
+                    <div class="detail-field">
+                        <strong>Prioridade</strong>
+                        <p th:text="${exame.prioridade}">Normal</p>
+                    </div>
+
+                    <div class="detail-field">
+                        <strong>Número do pedido</strong>
+                        <p th:text="${'#EX-' + exame.id}">Pedido</p>
+                    </div>
+
+                    <div class="detail-field">
+                        <strong>Solicitante</strong>
+                        <p th:text="${exame.consulta.agendamento.profissional.nome}">
+                            Profissional
+                        </p>
+                    </div>
+
+                    <div class="detail-field">
+                        <strong>Status do laudo</strong>
+                        <p th:text="${exame.statusLaudo}">Não iniciado</p>
+                    </div>
+
+                </div>
+
+                <!-- DESCRIÇÃO -->
+                <div class="detail-description"
+                     th:if="${exame.descricao != null and !exame.descricao.isBlank()}">
+
+                    <strong>Descrição da solicitação</strong>
+                    <p th:text="${exame.descricao}"></p>
+
+                </div>
+
+                <hr>
+
+                <!-- RESULTADO -->
+                <section class="detail-section">
+
+                    <h4>Registrar resultado</h4>
+
+                    <form th:action="@{/exames/{id}/resultado(id=${exame.id})}"
+                          method="post">
+
+                        <textarea name="descricaoResultado"
+                                  placeholder="Digite o resultado do exame..."
+                                  th:text="${resultadosPorExame[exame.id] != null ? resultadosPorExame[exame.id].descricaoResultado : ''}"
+                                  th:disabled="${exame.status == 'Cancelado'}"
+                                  required></textarea>
+
+                        <div class="buttons">
+
+                            <button type="button"
+                                    class="btn-outline"
+                                    data-bs-dismiss="modal">
+                                Cancelar
+                            </button>
+
+                            <button type="submit"
+                                    class="btn-primary"
+                                    th:disabled="${exame.status == 'Cancelado'}">
+                                Salvar resultado
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </section>
+
+                <hr>
+
+                <!-- ANEXOS -->
+                <section class="detail-section">
+
+                    <h4>Anexar arquivo</h4>
+
+                    <form th:action="@{/exames/{id}/anexos(id=${exame.id})}"
+                          method="post"
+                          enctype="multipart/form-data">
+
+                        <label class="upload-area">
+
+                            Clique para selecionar um arquivo
+
+                            <input type="file"
+                                   name="arquivo"
+                                   accept=".jpg,.jpeg,.png,.pdf,.dcm"
+                                   required
+                                   hidden>
+
+                        </label>
+
+                        <button type="submit"
+                                class="btn-primary"
+                                th:disabled="${exame.status == 'Cancelado'}">
+                            Enviar anexo
+                        </button>
+
+                    </form>
+
+                    <!-- LISTA DE ARQUIVOS -->
+                    <div class="attachment-list"
+                         th:if="${anexosPorExame[exame.id] != null and !#lists.isEmpty(anexosPorExame[exame.id])}">
+
+                        <div class="attachment-item"
+                             th:each="anexo : ${anexosPorExame[exame.id]}">
+
+                            <strong th:text="${anexo.nomeOriginal}">
+                                arquivo.pdf
+                            </strong>
+
+                            <a th:href="@{/exames/{exameId}/anexos/{anexoId}/download(exameId=${exame.id},anexoId=${anexo.id})}">
+                                Baixar arquivo
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                    <p th:if="${anexosPorExame[exame.id] == null or #lists.isEmpty(anexosPorExame[exame.id])}">
+                        Nenhum arquivo anexado.
+                    </p>
+
+                </section>
+
+                <hr>
+
+                <!-- LAUDO -->
+                <section class="detail-section">
+
+                    <h4>Laudo</h4>
+
+                    <form th:action="@{/exames/{id}/laudo/iniciar(id=${exame.id})}"
+                          method="post"
+                          th:if="${exame.status == 'Realizado' and exame.statusLaudo != 'Emitido' and exame.statusLaudo != 'Em emissão'}">
+
+                        <button type="submit"
+                                class="btn-outline">
+                            Iniciar emissão do laudo
+                        </button>
+
+                    </form>
+
+                    <form th:action="@{/exames/{id}/laudo/emitir(id=${exame.id})}"
+                          method="post"
+                          th:if="${exame.status == 'Realizado' and exame.statusLaudo != 'Emitido'}">
+
+                        <textarea name="descricaoLaudo"
+                                  placeholder="Digite o conteúdo do laudo..."
+                                  required></textarea>
+
+                        <button type="submit"
+                                class="btn-primary">
+                            Emitir laudo
+                        </button>
+
+                    </form>
+
+                    <!-- LAUDO JÁ EMITIDO -->
+                    <div class="issued-report"
+                         th:if="${resultadosPorExame[exame.id] != null
+                                 and resultadosPorExame[exame.id].descricaoLaudo != null
+                                 and exame.statusLaudo == 'Emitido'}">
+
+                        <h5>Laudo emitido</h5>
+
+                        <p th:text="${resultadosPorExame[exame.id].descricaoLaudo}">
+                            Conteúdo do laudo
+                        </p>
+
+                        <small th:if="${resultadosPorExame[exame.id].dataEmissaoLaudo != null}"
+                               th:text="${'Emitido em ' + #temporals.format(resultadosPorExame[exame.id].dataEmissaoLaudo, 'dd/MM/yyyy HH:mm')}">
+                        </small>
+
+                    </div>
+
+                </section>
+
+                <hr>
+
+                <!-- HISTÓRICO -->
+                <section class="detail-section">
+
+                    <h4>Histórico do exame</h4>
+
+                    <div th:if="${historicosPorExame[exame.id] != null and !#lists.isEmpty(historicosPorExame[exame.id])}">
+
+                        <div class="history-item history-content"
+                             th:each="evento : ${historicosPorExame[exame.id]}">
+
+                            <strong th:text="${evento.acao}">
+                                Ação
+                            </strong>
+
+                            <p th:text="${evento.descricao}">
+                                Descrição
+                            </p>
+
+                            <small th:text="${evento.dataEvento != null ? #temporals.format(evento.dataEvento, 'dd/MM/yyyy HH:mm') : ''}">
+                                Data
+                            </small>
+
+                            <small th:if="${evento.profissional != null}"
+                                   th:text="${'Responsável: ' + evento.profissional.nome}">
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <p th:if="${historicosPorExame[exame.id] == null or #lists.isEmpty(historicosPorExame[exame.id])}">
+                        Nenhum evento registrado.
+                    </p>
+
+                </section>
+
+                <hr>
+
+                <!-- CANCELAR EXAME -->
+                <form th:action="@{/exames/{id}/cancelar(id=${exame.id})}"
+                      method="post"
+                      th:if="${exame.status != 'Realizado' and exame.status != 'Cancelado'}">
+
+                    <div class="cancel-exam-area">
+
+                        <button type="submit"
+                                class="btn-outline"
+                                onclick="return confirm('Deseja realmente cancelar este exame?')">
+                            Cancelar exame
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- BOOTSTRAP -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<!-- JAVASCRIPT -->
+<script>
+
+    // ==========================================
+    // ABRIR MODAL DE DETALHES
+    // ==========================================
+
+    function abrirDetalhes(id) {
+
+        const modalElemento = document.getElementById(id);
+
+        if (modalElemento) {
+
+            const modal = bootstrap.Modal.getOrCreateInstance(modalElemento);
+
+            modal.show();
+
+        }
+
+    }
+
+
+    // ==========================================
+    // FILTROS
+    // ==========================================
+
+    let filtroAtual = "pendentes";
+
+    const botoesFiltro = document.querySelectorAll(".tabs button");
+    const linhas = document.querySelectorAll(".exam-row");
+    const campoBusca = document.getElementById("searchInput");
+
+    function atualizarTabela() {
+
+        const busca = campoBusca.value.toLowerCase();
+
+        let pendentes = 0;
+        let realizados = 0;
+        let laudos = 0;
+
+        linhas.forEach(linha => {
+
+            const status = (linha.dataset.status || "").toLowerCase();
+            const statusLaudo = (linha.dataset.laudo || "").toLowerCase();
+
+            if (status === "pendente") {
+                pendentes++;
+            }
+
+            if (status === "realizado") {
+                realizados++;
+            }
+
+            if (statusLaudo === "pendente" ||
+                statusLaudo === "em emissão") {
+                laudos++;
+            }
+
+            const conteudo = (
+                (linha.dataset.paciente || "") + " " +
+                (linha.dataset.cpf || "") + " " +
+                (linha.dataset.solicitante || "") + " " +
+                (linha.dataset.exame || "")
+            ).toLowerCase();
+
+            const correspondeBusca = conteudo.includes(busca);
+
+            let correspondeFiltro = true;
+
+            if (filtroAtual === "pendentes") {
+                correspondeFiltro = status === "pendente";
+            }
+
+            if (filtroAtual === "realizados") {
+                correspondeFiltro = status === "realizado";
+            }
+
+            if (filtroAtual === "laudos") {
+                correspondeFiltro =
+                    statusLaudo === "pendente" ||
+                    statusLaudo === "em emissão";
+            }
+
+            linha.style.display =
+                correspondeBusca && correspondeFiltro ? "" : "none";
+
+        });
+
+        document.getElementById("contadorPendentes").textContent = pendentes;
+        document.getElementById("contadorRealizados").textContent = realizados;
+        document.getElementById("contadorLaudos").textContent = laudos;
+
+    }
+
+
+    botoesFiltro.forEach(botao => {
+
+        botao.addEventListener("click", function () {
+
+            botoesFiltro.forEach(item => item.classList.remove("active"));
+
+            this.classList.add("active");
+
+            filtroAtual = this.dataset.filter;
+
+            atualizarTabela();
+
+        });
+
+    });
+
+
+    campoBusca.addEventListener("input", atualizarTabela);
+
+    atualizarTabela();
+
+
+    // ==========================================
+    // SOLICITAR EXAME
+    // ==========================================
+
+    document.getElementById("formSolicitarExame")
+        .addEventListener("submit", function (event) {
+
+            const consultaId = document.getElementById("consultaId").value;
+
+            if (!consultaId) {
+
+                event.preventDefault();
+
+                alert("Selecione uma consulta.");
+
+                return;
+
+            }
+
+            this.action = "/exames/solicitar/" + consultaId;
+
+        });
+
+
+    // ==========================================
+    // REABRIR MODAL APÓS UMA OPERAÇÃO
+    // ==========================================
+
+    const exameParaAbrir = document.body.dataset.exameParaAbrir;
+
+    if (exameParaAbrir && exameParaAbrir !== "null") {
+
+        abrirDetalhes("modalDetalhe" + exameParaAbrir);
+
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,4 +1,3 @@
-
 package com.medcare.controller;
 
 import com.medcare.model.Agendamento;
