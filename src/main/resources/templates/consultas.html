@@ -1,0 +1,592 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MedCare | Consultas</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/consultas.css}">
+    <link rel="stylesheet" th:href="@{/css/consulta-modal.css}">
+</head>
+
+<body>
+
+<!-- MENU LATERAL -->
+<aside class="sidebar">
+
+    <a class="brand" th:href="@{/dashboard}">
+        <span class="brand-mark">+</span>
+        <span>Med<span>Care</span></span>
+    </a>
+
+    <div class="nav-label">MENU PRINCIPAL</div>
+
+    <nav class="navigation" aria-label="Navegação principal">
+
+        <a class="nav-link" th:href="@{/pacientes}">
+            <span class="nav-icon">♙</span>
+            Pacientes
+        </a>
+
+        <a class="nav-link" th:href="@{/agendamentos}">
+            <span class="nav-icon">▦</span>
+            Agendamentos
+        </a>
+
+        <a class="nav-link active" th:href="@{/consultas}">
+            <span class="nav-icon">⚕</span>
+            Consultas
+        </a>
+
+        <a class="nav-link" th:href="@{/exames}">
+            <span class="nav-icon">▤</span>
+            Exames
+        </a>
+
+        <a class="nav-link" th:href="@{/admin}">
+            <span class="nav-icon">⚙</span>
+            Administração
+        </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <div class="support-card">
+            <span class="support-icon">?</span>
+
+            <div>
+                <strong>Precisa de ajuda?</strong>
+                <small>Consulte o suporte do sistema.</small>
+            </div>
+        </div>
+
+        <a class="nav-link logout" th:href="@{/logout}">
+            <span class="nav-icon">↪</span>
+            Sair
+        </a>
+
+    </div>
+
+</aside>
+
+
+<!-- CONTEÚDO PRINCIPAL -->
+<main class="main-content">
+
+    <!-- CABEÇALHO -->
+    <header class="topbar">
+
+        <div class="breadcrumb">
+            MedCare <span>/</span> <strong>Consultas</strong>
+        </div>
+
+        <div class="topbar-actions">
+
+            <button class="icon-button"
+                    type="button"
+                    aria-label="Notificações">
+                ♧<i></i>
+            </button>
+
+            <div class="profile">
+
+                <div class="avatar avatar-small"
+                     th:if="${usuarioLogado != null and usuarioLogado.nome != null and !#strings.isEmpty(usuarioLogado.nome)}"
+                     th:text="${#strings.substring(usuarioLogado.nome, 0, 1)}">
+                    U
+                </div>
+
+                <div class="avatar avatar-small"
+                     th:unless="${usuarioLogado != null and usuarioLogado.nome != null and !#strings.isEmpty(usuarioLogado.nome)}">
+                    U
+                </div>
+
+                <div class="profile-text">
+
+                    <strong th:text="${usuarioLogado != null ? usuarioLogado.nome : 'Usuário'}">
+                        Usuário
+                    </strong>
+
+                    <small th:text="${usuarioLogado != null ? usuarioLogado.cargo : 'Profissional'}">
+                        Profissional
+                    </small>
+
+                </div>
+
+                <span class="chevron">⌄</span>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- TÍTULO DA PÁGINA -->
+    <section class="page-heading">
+
+        <div>
+            <span class="eyebrow">GESTÃO CLÍNICA</span>
+
+            <h1>Consultas</h1>
+
+            <p>
+                Gerencie os atendimentos clínicos e acompanhe
+                os registros dos pacientes.
+            </p>
+        </div>
+
+    </section>
+
+
+    <!-- RESUMO -->
+    <section class="summary-grid">
+
+        <article class="summary-card">
+
+            <div class="summary-icon green">⚕</div>
+
+            <div>
+                <span class="summary-label">Minhas consultas</span>
+
+                <strong th:text="${consultas != null ? #lists.size(consultas) : 0}">
+                    0
+                </strong>
+
+                <small>Atendimentos registrados</small>
+            </div>
+
+        </article>
+
+    </section>
+
+
+    <!-- MENSAGENS -->
+    <div class="mensagem-sucesso"
+         th:if="${sucesso != null}"
+         th:text="${sucesso}">
+    </div>
+
+    <div class="mensagem-erro"
+         th:if="${erro != null}"
+         th:text="${erro}">
+    </div>
+
+
+    <!-- LISTAGEM -->
+    <section class="content-card">
+
+        <div class="section-header">
+
+            <div>
+                <h2>Consultas registradas</h2>
+
+                <p>
+                    Acompanhe os atendimentos vinculados aos seus agendamentos.
+                </p>
+            </div>
+
+        </div>
+
+
+        <!-- TABELA -->
+        <div class="table-wrap">
+
+            <table class="exam-table">
+
+                <thead>
+                <tr>
+                    <th>Paciente</th>
+                    <th>Profissional</th>
+                    <th>Data de início</th>
+                    <th>Queixa principal</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="consulta : ${consultas}">
+
+                    <!-- PACIENTE -->
+                    <td>
+                        <div class="patient-cell">
+
+                            <div class="avatar"
+                                 th:if="${consulta.agendamento.paciente.nome != null and !#strings.isEmpty(consulta.agendamento.paciente.nome)}"
+                                 th:text="${#strings.substring(consulta.agendamento.paciente.nome, 0, 1)}">
+                                P
+                            </div>
+
+                            <div class="avatar"
+                                 th:unless="${consulta.agendamento.paciente.nome != null and !#strings.isEmpty(consulta.agendamento.paciente.nome)}">
+                                P
+                            </div>
+
+                            <div>
+                                <strong th:text="${consulta.agendamento.paciente.nome}">
+                                    Nome do paciente
+                                </strong>
+
+                                <small th:text="${consulta.agendamento.paciente.cpf}">
+                                    CPF
+                                </small>
+                            </div>
+
+                        </div>
+                    </td>
+
+
+                    <!-- PROFISSIONAL -->
+                    <td>
+                        <span th:text="${consulta.agendamento.profissional.nome}">
+                            Profissional
+                        </span>
+                    </td>
+
+
+                    <!-- DATA -->
+                    <td>
+                        <span th:text="${#temporals.format(consulta.dataInicio, 'dd/MM/yyyy')}">
+                            --/--/----
+                        </span>
+
+                        <small class="table-sub"
+                               th:text="${#temporals.format(consulta.dataInicio, 'HH:mm')}">
+                            --:--
+                        </small>
+                    </td>
+
+
+                    <!-- QUEIXA PRINCIPAL -->
+                    <td>
+
+                        <span th:if="${consulta.queixaPrincipal != null and !#strings.isEmpty(consulta.queixaPrincipal)}"
+                              th:text="${consulta.queixaPrincipal}">
+                            Queixa principal
+                        </span>
+
+                        <span th:unless="${consulta.queixaPrincipal != null and !#strings.isEmpty(consulta.queixaPrincipal)}">
+                            Não informada
+                        </span>
+
+                    </td>
+
+
+                    <!-- STATUS -->
+                    <td>
+
+                        <span class="status"
+                              th:classappend="${#strings.toLowerCase(#strings.replace(consulta.status, ' ', '-'))}"
+                              th:text="${consulta.status}">
+                            Em Atendimento
+                        </span>
+
+                    </td>
+
+
+                    <!-- AÇÕES -->
+                    <td>
+
+                        <div class="acoes-consulta">
+
+                            <button type="button"
+                                    class="btn-consulta"
+                                    th:attr="data-modal-url=@{/consultas/modal/agendamento/{id}(id=${consulta.agendamento.id})}">
+                                <span>⚕</span>
+                                Atendimento
+                            </button>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+
+                <!-- LISTA VAZIA -->
+                <tr th:if="${consultas == null or #lists.isEmpty(consultas)}">
+
+                    <td colspan="6" class="empty-state">
+
+                        <span>⚕</span>
+
+                        <strong>Nenhuma consulta encontrada</strong>
+
+                        <small>
+                            As consultas iniciadas a partir dos agendamentos
+                            aparecerão nesta lista.
+                        </small>
+
+                    </td>
+
+                </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- RODAPÉ DA TABELA -->
+        <div class="table-footer">
+
+            <span>
+                Exibindo
+                <strong th:text="${consultas != null ? #lists.size(consultas) : 0}">
+                    0
+                </strong>
+                consulta(s)
+            </span>
+
+        </div>
+
+    </section>
+
+
+    <!-- RODAPÉ -->
+    <p class="page-footnote">
+        MedCare <span>•</span> Gestão de saúde integrada
+    </p>
+
+</main>
+
+
+<!-- CONTAINER DO MODAL -->
+<div id="consultaModalContainer"></div>
+
+
+<!-- JAVASCRIPT DO MODAL -->
+<script>
+
+
+    const modalContainer = document.getElementById('consultaModalContainer');
+
+    // ==========================================
+    // ABRIR MODAL
+    // ==========================================
+
+    document.addEventListener('click', async function (event) {
+
+        const botaoAtendimento = event.target.closest('.btn-consulta');
+
+        if (botaoAtendimento) {
+
+            const url = botaoAtendimento.dataset.modalUrl;
+
+            modalContainer.innerHTML =
+                '<div class="modal-loading">Carregando atendimento...</div>';
+
+            try {
+
+                const resposta = await fetch(url, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                });
+
+                if (!resposta.ok) {
+                    throw new Error('Não foi possível carregar o atendimento.');
+                }
+
+                const html = await resposta.text();
+
+                modalContainer.innerHTML = html;
+
+                abrirModal();
+
+            } catch (erro) {
+
+                modalContainer.innerHTML = '';
+                alert(erro.message);
+
+            }
+
+            return;
+        }
+
+        // FECHAR MODAL
+
+        if (
+            event.target.closest('[data-fechar-modal]') ||
+            event.target.classList.contains('modal-overlay')
+        ) {
+
+            fecharModal();
+
+        }
+
+    });
+
+    // ==========================================
+    // ENVIAR FORMULÁRIOS DO MODAL
+    // ==========================================
+
+    document.addEventListener('submit', async function (event) {
+
+        const formularioModal = event.target.closest('.consulta-modal-form');
+
+        if (!formularioModal) {
+            return;
+        }
+
+        event.preventDefault();
+
+        // Identifica o botão acionado
+        const botao = event.submitter;
+
+        // Prioriza o formaction do botão
+        const url = botao?.getAttribute('formaction')
+            ? botao.formAction
+            : formularioModal.action;
+
+        const botaoTextoOriginal = botao?.textContent;
+
+        if (botao) {
+            botao.disabled = true;
+            botao.textContent = 'Processando...';
+        }
+
+        try {
+
+            const resposta = await fetch(url, {
+                method: 'POST',
+                body: new FormData(formularioModal),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            if (!resposta.ok) {
+                throw new Error('Não foi possível processar o atendimento.');
+            }
+
+            const html = await resposta.text();
+
+            modalContainer.innerHTML = html;
+
+            abrirModal();
+
+            // Atualiza a tabela com os dados mais recentes
+            atualizarTabelaConsultas();
+
+        } catch (erro) {
+
+            alert(erro.message);
+
+            if (botao) {
+                botao.disabled = false;
+                botao.textContent = botaoTextoOriginal;
+            }
+
+        }
+
+    });
+
+    // ==========================================
+    // ATUALIZAR TABELA DE CONSULTAS
+    // ==========================================
+
+    async function atualizarTabelaConsultas() {
+
+        try {
+
+            const resposta = await fetch(window.location.pathname, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
+            if (!resposta.ok) {
+                return;
+            }
+
+            const html = await resposta.text();
+
+            const documento = new DOMParser().parseFromString(html, 'text/html');
+
+            const tabelaAtual = document.querySelector('.exam-table');
+            const tabelaNova = documento.querySelector('.exam-table');
+
+            if (tabelaAtual && tabelaNova) {
+                tabelaAtual.innerHTML = tabelaNova.innerHTML;
+            }
+
+            // Atualiza o contador de consultas
+            const resumoAtual = document.querySelector('.summary-card strong');
+            const resumoNovo = documento.querySelector('.summary-card strong');
+
+            if (resumoAtual && resumoNovo) {
+                resumoAtual.textContent = resumoNovo.textContent;
+            }
+
+            // Atualiza o rodapé
+            const rodapeAtual = document.querySelector('.table-footer');
+            const rodapeNovo = documento.querySelector('.table-footer');
+
+            if (rodapeAtual && rodapeNovo) {
+                rodapeAtual.innerHTML = rodapeNovo.innerHTML;
+            }
+
+        } catch (erro) {
+
+            console.error('Erro ao atualizar a tabela:', erro);
+
+        }
+
+    }
+
+    // ==========================================
+    // ABRIR MODAL
+    // ==========================================
+
+    function abrirModal() {
+
+        const modal = modalContainer.querySelector('.modal-overlay');
+
+        if (modal) {
+            modal.classList.add('aberto');
+            document.body.classList.add('modal-aberto');
+        }
+
+    }
+
+    // ==========================================
+    // FECHAR MODAL
+    // ==========================================
+
+    function fecharModal() {
+
+        modalContainer.innerHTML = '';
+        document.body.classList.remove('modal-aberto');
+
+    }
+
+    // ==========================================
+    // FECHAR COM ESC
+    // ==========================================
+
+    document.addEventListener('keydown', function (event) {
+
+        if (event.key === 'Escape') {
+            fecharModal();
+        }
+
+    });
+
+</script>
+
+</body>
+</html>

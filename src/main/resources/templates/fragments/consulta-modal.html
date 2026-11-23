@@ -1,0 +1,190 @@
+
+<div th:fragment="modal">
+
+    <div class="modal-overlay">
+
+        <div class="consulta-modal">
+
+            <div th:if="${modalErro}"
+                 class="consulta-modal-erro"
+                 th:text="${modalErro}">
+            </div>
+
+            <!-- CABEÇALHO -->
+            <div class="consulta-modal-header">
+                <div>
+                    <span class="consulta-modal-subtitle">MEDCARE • ATENDIMENTO</span>
+                    <h2>Detalhes da consulta</h2>
+                </div>
+
+                <button type="button"
+                        class="modal-fechar"
+                        data-fechar-modal
+                        aria-label="Fechar">
+                    &times;
+                </button>
+            </div>
+
+            <!-- DADOS DO AGENDAMENTO -->
+            <div class="consulta-info">
+
+                <div class="consulta-info-item">
+                    <span>Paciente</span>
+                    <strong th:text="${agendamento.paciente.nome}">Nome do paciente</strong>
+                </div>
+
+                <div class="consulta-info-item">
+                    <span>Profissional</span>
+                    <strong th:text="${agendamento.profissional.nome}">Nome do profissional</strong>
+                </div>
+
+                <div class="consulta-info-item">
+                    <span>Data e horário</span>
+                    <strong th:text="${#temporals.format(agendamento.dataHora, 'dd/MM/yyyy HH:mm')}">
+                        00/00/0000 00:00
+                    </strong>
+                </div>
+
+                <div class="consulta-info-item">
+                    <span>Status</span>
+                    <strong th:text="${consulta != null ? consulta.status : agendamento.status}">
+                        Status
+                    </strong>
+                </div>
+
+            </div>
+
+            <!-- CONSULTA AINDA NÃO INICIADA -->
+            <div th:if="${consulta == null}" class="consulta-nao-iniciada">
+
+                <div class="consulta-aviso">
+                    <span>ⓘ</span>
+                    <p>
+                        Este agendamento ainda não possui uma consulta iniciada.
+                        Clique abaixo para iniciar o atendimento.
+                    </p>
+                </div>
+
+                <form class="consulta-modal-form"
+                      method="post"
+                      th:action="@{/consultas/modal/iniciar/{id}(id=${agendamento.id})}">
+
+                    <button type="submit" class="btn-iniciar-consulta">
+                        Iniciar atendimento
+                    </button>
+
+                </form>
+
+            </div>
+
+            <!-- CONSULTA EXISTENTE -->
+
+            <!-- CONSULTA EXISTENTE -->
+            <div th:if="${consulta != null}">
+
+                <form class="consulta-modal-form"
+                      method="post"
+                      th:action="@{/consultas/modal/{id}/atualizar(id=${consulta.id})}">
+
+                    <div class="consulta-formulario">
+
+                        <div class="campo-consulta">
+                            <label for="queixaPrincipal">Queixa principal</label>
+                            <textarea
+                                    id="queixaPrincipal"
+                                    name="queixaPrincipal"
+                                    rows="3"
+                                    placeholder="Descreva o motivo principal da consulta..."
+                                    th:readonly="${consulta.status == 'Finalizada'}"
+                                    th:required="${consulta.status != 'Finalizada'}"
+                                    th:text="${consulta.queixaPrincipal}">
+                </textarea>
+                        </div>
+
+                        <div class="campo-consulta">
+                            <label for="anamnese">Anamnese</label>
+                            <textarea
+                                    id="anamnese"
+                                    name="anamnese"
+                                    rows="4"
+                                    placeholder="Registre o histórico e os sintomas do paciente..."
+                                    th:readonly="${consulta.status == 'Finalizada'}"
+                                    th:required="${consulta.status != 'Finalizada'}"
+                                    th:text="${consulta.anamnese}">
+                </textarea>
+                        </div>
+
+                        <div class="campo-consulta">
+                            <label for="diagnostico">Diagnóstico</label>
+                            <textarea
+                                    id="diagnostico"
+                                    name="diagnostico"
+                                    rows="3"
+                                    placeholder="Informe o diagnóstico..."
+                                    th:readonly="${consulta.status == 'Finalizada'}"
+                                    th:required="${consulta.status != 'Finalizada'}"
+                                    th:text="${consulta.diagnostico}">
+                </textarea>
+                        </div>
+
+                        <div class="campo-consulta">
+                            <label for="conduta">Conduta</label>
+                            <textarea
+                                    id="conduta"
+                                    name="conduta"
+                                    rows="3"
+                                    placeholder="Descreva o tratamento ou as orientações..."
+                                    th:readonly="${consulta.status == 'Finalizada'}"
+                                    th:required="${consulta.status != 'Finalizada'}"
+                                    th:text="${consulta.conduta}">
+                </textarea>
+                        </div>
+
+                    </div>
+
+                    <!-- AÇÕES DA CONSULTA -->
+                    <div th:if="${consulta.status != 'Finalizada'}"
+                         class="consulta-modal-acoes">
+
+                        <button type="submit"
+                                class="btn-salvar-consulta"
+                                th:formaction="@{/consultas/modal/{id}/atualizar(id=${consulta.id})}">
+                            Salvar alterações
+                        </button>
+
+                        <button type="submit"
+                                class="btn-finalizar-consulta"
+                                th:formaction="@{/consultas/modal/{id}/finalizar(id=${consulta.id})}"
+                                formmethod="post">
+                            Finalizar consulta
+                        </button>
+
+                    </div>
+
+                </form>
+
+                <!-- CONSULTA FINALIZADA -->
+                <div th:if="${consulta.status == 'Finalizada'}"
+                     class="consulta-finalizada-aviso">
+
+                    <span>✓</span>
+                    Consulta finalizada. Os registros estão disponíveis para consulta.
+
+                </div>
+
+            </div>
+
+            <!-- RODAPÉ -->
+            <div class="consulta-modal-footer">
+                <button type="button"
+                        class="btn-fechar-consulta"
+                        data-fechar-modal>
+                    Fechar
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

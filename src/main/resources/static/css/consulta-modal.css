@@ -1,0 +1,326 @@
+
+/* ==========================================
+   MODAL DE CONSULTA - MEDCARE
+========================================== */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(20, 35, 28, 0.60);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.modal-overlay.aberto {
+    opacity: 1;
+    visibility: visible;
+}
+
+.consulta-modal {
+    width: 100%;
+    max-width: 760px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.20);
+    font-family: 'DM Sans', sans-serif;
+    transform: translateY(15px);
+    transition: transform 0.25s ease;
+}
+
+.modal-overlay.aberto .consulta-modal {
+    transform: translateY(0);
+}
+
+/* CABEÇALHO */
+
+.consulta-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 25px 30px;
+    border-bottom: 1px solid #E9EEE9;
+}
+
+.consulta-modal-subtitle {
+    display: block;
+    margin-bottom: 6px;
+    color: #609C7A;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.3px;
+}
+
+.consulta-modal-header h2 {
+    margin: 0;
+    color: #263C30;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.modal-fechar {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 9px;
+    background: #F2F5F2;
+    color: #526357;
+    font-size: 25px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.modal-fechar:hover {
+    background: #E5EDE7;
+    color: #2D6048;
+}
+
+/* INFORMAÇÕES DO AGENDAMENTO */
+
+.consulta-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    padding: 24px 30px;
+    background: #F8FAF8;
+    border-bottom: 1px solid #E9EEE9;
+}
+
+.consulta-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.consulta-info-item span {
+    color: #89958D;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.consulta-info-item strong {
+    color: #34483B;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* AVISO DE CONSULTA NÃO INICIADA */
+
+.consulta-nao-iniciada {
+    padding: 30px;
+}
+
+.consulta-aviso {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    border: 1px solid #DCE9DF;
+    border-radius: 10px;
+    background: #F3F8F4;
+}
+
+.consulta-aviso span {
+    color: #2D6048;
+    font-size: 18px;
+}
+
+.consulta-aviso p {
+    margin: 0;
+    color: #53675A;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* FORMULÁRIO */
+
+.consulta-formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 28px 30px;
+}
+
+.campo-consulta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.campo-consulta label {
+    color: #34483B;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.campo-consulta textarea {
+    width: 100%;
+    min-height: 85px;
+    padding: 13px 15px;
+    border: 1px solid #DCE5DE;
+    border-radius: 9px;
+    outline: none;
+    resize: vertical;
+    background: #FFFFFF;
+    color: #34483B;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    line-height: 1.6;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.campo-consulta textarea::placeholder {
+    color: #A6B0A9;
+}
+
+.campo-consulta textarea:focus {
+    border-color: #609C7A;
+    box-shadow: 0 0 0 3px rgba(96, 156, 122, 0.12);
+}
+
+.campo-consulta textarea[readonly] {
+    background: #F6F8F6;
+    color: #68766D;
+    cursor: default;
+}
+
+/* BOTÕES */
+
+.consulta-modal-acoes,
+.consulta-modal-finalizar {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 30px 18px;
+}
+
+.btn-iniciar-consulta,
+.btn-salvar-consulta,
+.btn-finalizar-consulta,
+.btn-fechar-consulta {
+    min-height: 42px;
+    padding: 0 20px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-iniciar-consulta,
+.btn-salvar-consulta {
+    background: #2D6048;
+    color: #FFFFFF;
+}
+
+.btn-iniciar-consulta:hover,
+.btn-salvar-consulta:hover {
+    background: #22533C;
+}
+
+.btn-finalizar-consulta {
+    background: #EAF3ED;
+    color: #2D6048;
+}
+
+.btn-finalizar-consulta:hover {
+    background: #DCEBE0;
+}
+
+.btn-fechar-consulta {
+    background: #F0F3F0;
+    color: #526357;
+}
+
+.btn-fechar-consulta:hover {
+    background: #E3E9E4;
+}
+
+/* CONSULTA FINALIZADA */
+
+.consulta-finalizada-aviso {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 30px 22px;
+    padding: 14px;
+    border-radius: 9px;
+    background: #F0F6F1;
+    color: #2D6048;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.consulta-finalizada-aviso span {
+    font-size: 17px;
+}
+
+/* RODAPÉ */
+
+.consulta-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 18px 30px;
+    border-top: 1px solid #E9EEE9;
+}
+
+/* RESPONSIVIDADE */
+
+@media (max-width: 600px) {
+
+    .modal-overlay {
+        padding: 10px;
+    }
+
+    .consulta-modal {
+        max-height: 94vh;
+        border-radius: 12px;
+    }
+
+    .consulta-modal-header {
+        padding: 20px;
+    }
+
+    .consulta-modal-header h2 {
+        font-size: 19px;
+    }
+
+    .consulta-info {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 20px;
+    }
+
+    .consulta-formulario {
+        padding: 22px 20px;
+    }
+
+    .consulta-modal-acoes,
+    .consulta-modal-finalizar {
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+
+    .consulta-modal-footer {
+        padding: 16px 20px;
+    }
+}
+
+.consulta-modal-erro {
+    margin: 18px 30px 0;
+    padding: 12px 15px;
+    border: 1px solid #F0CCCC;
+    border-radius: 8px;
+    background: #FFF3F3;
+    color: #A33B3B;
+    font-size: 12px;
+    font-weight: 600;
+}

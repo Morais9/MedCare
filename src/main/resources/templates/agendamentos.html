@@ -1,250 +1,250 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#315f4e">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#315f4e">
 
-  <title>Agendamentos | MedCare</title>
+    <title>Agendamentos | MedCare</title>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" th:href="@{/css/dashboard-pacientes.css}">
-  <link rel="stylesheet" th:href="@{/css/agendamentos.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard-pacientes.css}">
+    <link rel="stylesheet" th:href="@{/css/agendamentos.css}">
+    <link rel="stylesheet" th:href="@{/css/consulta-modal.css}">
 </head>
 
 <body>
 
 <div class="app">
 
-  <!-- MENU LATERAL -->
-  <aside class="sidebar">
+    <!-- MENU LATERAL -->
+    <aside class="sidebar">
 
-    <a class="brand" th:href="@{/dashboard}">
-      <span class="brand-icon">+</span>
-      <span>Med<span class="brand-highlight">Care</span></span>
-    </a>
+        <a class="brand" th:href="@{/dashboard}">
+            <span class="brand-icon">+</span>
+            <span>Med<span class="brand-highlight">Care</span></span>
+        </a>
 
-    <div class="menu-label">MENU PRINCIPAL</div>
+        <div class="menu-label">MENU PRINCIPAL</div>
 
-    <nav class="sidebar-nav">
+        <nav class="sidebar-nav">
 
-      <a class="nav-item" th:href="@{/dashboard}">
-        <span class="nav-icon">♙</span>
-        <span>Pacientes</span>
-      </a>
+            <a class="nav-item" th:href="@{/dashboard}">
+                <span class="nav-icon">♙</span>
+                <span>Pacientes</span>
+            </a>
 
-      <a class="nav-item active" th:href="@{/agendamentos}">
-        <span class="nav-icon">▦</span>
-        <span>Agendamentos</span>
-      </a>
+            <a class="nav-item active" th:href="@{/agendamentos}">
+                <span class="nav-icon">▦</span>
+                <span>Agendamentos</span>
+            </a>
 
-      <a class="nav-item" href="#">
-        <span class="nav-icon">⚕</span>
-        <span>Consultas</span>
-      </a>
+            <a class="nav-item" th:href="@{/consultas}">
+                <span class="nav-icon">⚕</span>
+                <span>Consultas</span>
+            </a>
 
-      <a class="nav-item" href="#">
-        <span class="nav-icon">▤</span>
-        <span>Exames</span>
-      </a>
+            <a class="nav-item" href="#">
+                <span class="nav-icon">▤</span>
+                <span>Exames</span>
+            </a>
 
-      <a class="nav-item" href="#">
-        <span class="nav-icon">⚙</span>
-        <span>Administração</span>
-      </a>
+            <a class="nav-item" href="#">
+                <span class="nav-icon">⚙</span>
+                <span>Administração</span>
+            </a>
 
-    </nav>
+        </nav>
 
-    <div class="sidebar-bottom">
+        <div class="sidebar-bottom">
 
-      <div class="sidebar-user">
-        <div class="avatar" th:text="${iniciaisUsuario}">US</div>
+            <div class="sidebar-user">
+                <div class="avatar" th:text="${iniciaisUsuario}">US</div>
 
-        <div class="sidebar-user-info">
-          <strong th:text="${nomeUsuario}">Usuário</strong>
-          <span th:text="${cargoUsuario}">Profissional</span>
-        </div>
-      </div>
-
-      <form th:action="@{/logout}" method="post">
-        <button class="logout-button" type="submit">
-          <span class="nav-icon">⇥</span>
-          Sair do sistema
-        </button>
-      </form>
-
-    </div>
-  </aside>
-
-
-  <!-- CONTEÚDO PRINCIPAL -->
-  <div class="main-panel">
-
-    <header class="topbar">
-
-      <div class="breadcrumb">
-        <span>MedCare</span>
-        <span class="breadcrumb-separator">/</span>
-        <strong>Agendamentos</strong>
-      </div>
-
-      <div class="topbar-actions">
-
-        <span class="topbar-divider"></span>
-
-        <div class="profile-button">
-
-          <div class="avatar" th:text="${iniciaisUsuario}">US</div>
-
-          <div class="profile-summary">
-            <strong th:text="${nomeUsuario}">Usuário</strong>
-            <span th:text="${cargoUsuario}">Profissional</span>
-          </div>
-
-        </div>
-
-      </div>
-    </header>
-
-
-    <main class="dashboard-content">
-
-      <div class="conteudo">
-
-        <!-- TÍTULO -->
-        <div class="titulo-pagina">
-
-          <div class="textos-titulo">
-            <h1>Agendamentos</h1>
-            <p>Gerencie os atendimentos e acompanhe a agenda dos profissionais.</p>
-          </div>
-
-        </div>
-
-
-        <!-- MENSAGENS -->
-        <div th:if="${sucesso}"
-             class="mensagem-sucesso"
-             th:text="${sucesso}">
-        </div>
-
-        <div th:if="${erro}"
-             class="mensagem-erro"
-             th:text="${erro}">
-        </div>
-
-
-        <div class="corpo">
-
-          <!-- LISTA DE AGENDAMENTOS -->
-          <section class="card-tabela">
-
-            <div class="card-novo-header">
-              <span class="card-novo-titulo">Agendamentos registrados</span>
+                <div class="sidebar-user-info">
+                    <strong th:text="${nomeUsuario}">Usuário</strong>
+                    <span th:text="${cargoUsuario}">Profissional</span>
+                </div>
             </div>
 
+            <form th:action="@{/logout}" method="post">
+                <button class="logout-button" type="submit">
+                    <span class="nav-icon">⇥</span>
+                    Sair do sistema
+                </button>
+            </form>
 
-            <!-- FILTROS -->
-            <div class="filtros">
+        </div>
+    </aside>
 
-              <div class="busca">
-                <span class="busca-lupa">⌕</span>
 
-                <input
-                        type="text"
-                        id="campoBusca"
-                        placeholder="Buscar paciente, CPF ou profissional..."
-                        autocomplete="off">
-              </div>
+    <!-- CONTEÚDO PRINCIPAL -->
+    <div class="main-panel">
 
-              <div class="combos">
+        <header class="topbar">
 
-                <select id="filtroEspecialidade" class="campo-combo">
-                  <option value="">Todas as especialidades</option>
-
-                  <option
-                          th:each="profissional : ${profissionais}"
-                          th:value="${profissional.especialidade}"
-                          th:text="${profissional.especialidade}">
-                  </option>
-                </select>
-
-              </div>
-
+            <div class="breadcrumb">
+                <span>MedCare</span>
+                <span class="breadcrumb-separator">/</span>
+                <strong>Agendamentos</strong>
             </div>
 
+            <div class="topbar-actions">
 
-            <!-- TABELA -->
-            <div class="tabela-scroll">
+                <span class="topbar-divider"></span>
 
-              <table id="tabelaAgendamentos">
+                <div class="profile-button">
 
-                <thead>
-                <tr>
-                  <th>Data</th>
-                  <th>Horário</th>
-                  <th>Paciente</th>
-                  <th>Especialidade</th>
-                  <th>Profissional</th>
-                  <th>Status</th>
-                  <th>Ações</th>
-                </tr>
-                </thead>
+                    <div class="avatar" th:text="${iniciaisUsuario}">US</div>
 
-                <tbody id="corpoTabela">
+                    <div class="profile-summary">
+                        <strong th:text="${nomeUsuario}">Usuário</strong>
+                        <span th:text="${cargoUsuario}">Profissional</span>
+                    </div>
 
-                <tr th:each="agendamento : ${agendamentos}"
-                    class="linha-agendamento"
-                    th:attr="
+                </div>
+
+            </div>
+        </header>
+
+
+        <main class="dashboard-content">
+
+            <div class="conteudo">
+
+                <!-- TÍTULO -->
+                <div class="titulo-pagina">
+
+                    <div class="textos-titulo">
+                        <h1>Agendamentos</h1>
+                        <p>Gerencie os atendimentos e acompanhe a agenda dos profissionais.</p>
+                    </div>
+
+                </div>
+
+
+                <!-- MENSAGENS -->
+                <div th:if="${sucesso}"
+                     class="mensagem-sucesso"
+                     th:text="${sucesso}">
+                </div>
+
+                <div th:if="${erro}"
+                     class="mensagem-erro"
+                     th:text="${erro}">
+                </div>
+
+
+                <div class="corpo">
+
+                    <!-- LISTA DE AGENDAMENTOS -->
+                    <section class="card-tabela">
+
+                        <div class="card-novo-header">
+                            <span class="card-novo-titulo">Agendamentos registrados</span>
+                        </div>
+
+
+                        <!-- FILTROS -->
+                        <div class="filtros">
+
+                            <div class="busca">
+                                <span class="busca-lupa">⌕</span>
+
+                                <input
+                                        type="text"
+                                        id="campoBusca"
+                                        placeholder="Buscar paciente, CPF ou profissional..."
+                                        autocomplete="off">
+                            </div>
+
+                            <div class="combos">
+
+                                <select id="filtroEspecialidade" class="campo-combo">
+                                    <option value="">Todas as especialidades</option>
+
+                                    <option
+                                            th:each="profissional : ${profissionais}"
+                                            th:value="${profissional.especialidade}"
+                                            th:text="${profissional.especialidade}">
+                                    </option>
+                                </select>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- TABELA -->
+                        <div class="tabela-scroll">
+
+                            <table id="tabelaAgendamentos">
+
+                                <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Horário</th>
+                                    <th>Paciente</th>
+                                    <th>Especialidade</th>
+                                    <th>Profissional</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                                </thead>
+
+                                <tbody id="corpoTabela">
+
+                                <tr th:each="agendamento : ${agendamentos}"
+                                    class="linha-agendamento"
+                                    th:attr="
                                         data-paciente=${agendamento.paciente.nome},
                                         data-cpf=${agendamento.paciente.cpf},
                                         data-profissional=${agendamento.profissional.nome},
                                         data-especialidade=${agendamento.profissional.especialidade}">
 
-                  <td th:text="${#temporals.format(agendamento.dataHora, 'dd/MM/yyyy')}">
-                    21/11/2026
-                  </td>
+                                    <td th:text="${#temporals.format(agendamento.dataHora, 'dd/MM/yyyy')}">
+                                        21/11/2026
+                                    </td>
 
-                  <td>
-                    <strong th:text="${#strings.substring(agendamento.dataHora.toString(), 11, 16)}">
-                      08:00
-                    </strong>
+                                    <td>
+                                        <strong th:text="${#strings.substring(agendamento.dataHora.toString(), 11, 16)}">
+                                            08:00
+                                        </strong>
 
-                    <small>
+                                        <small>
                                             <span th:text="${#strings.substring(agendamento.dataHoraFim.toString(), 11, 16)}">
                                                 08:30
                                             </span>
-                    </small>
-                  </td>
+                                        </small>
+                                    </td>
 
-                  <td class="col-paciente">
+                                    <td class="col-paciente">
 
-                    <div class="paciente-nome"
-                         th:text="${agendamento.paciente.nome}">
-                      Nome do paciente
-                    </div>
+                                        <div class="paciente-nome"
+                                             th:text="${agendamento.paciente.nome}">
+                                            Nome do paciente
+                                        </div>
 
-                    <div class="paciente-cpf"
-                         th:text="${agendamento.paciente.cpf}">
-                      CPF
-                    </div>
+                                        <div class="paciente-cpf"
+                                             th:text="${agendamento.paciente.cpf}">
+                                            CPF
+                                        </div>
 
-                  </td>
+                                    </td>
 
-                  <td th:text="${agendamento.profissional.especialidade}">
-                    Especialidade
-                  </td>
+                                    <td th:text="${agendamento.profissional.especialidade}">
+                                        Especialidade
+                                    </td>
 
-                  <td th:text="${agendamento.profissional.nome}">
-                    Profissional
-                  </td>
+                                    <td th:text="${agendamento.profissional.nome}">
+                                        Profissional
+                                    </td>
 
-                  <td class="col-status">
+                                    <td class="col-status">
 
                                         <span class="badge"
                                               th:classappend="${agendamento.status == 'Confirmado' ? ' st-confirmado' :
@@ -255,85 +255,94 @@
                                             Confirmado
                                         </span>
 
-                  </td>
+                                    </td>
 
-                  <td>
+                                    <td>
 
-                    <div class="acoes-agendamento">
+                                        <div class="acoes-agendamento">
 
-                      <!-- ALTERAR STATUS -->
-                      <form th:action="@{/agendamentos/{id}/status(id=${agendamento.id})}"
-                            method="post"
-                            class="form-status">
+                                          <!-- ABRIR ATENDIMENTO -->
+                                          <button
+                                                  type="button"
+                                                  class="btn-consulta"
+                                                  th:attr="data-modal-url=@{/consultas/modal/agendamento/{id}(id=${agendamento.id})}">
+                                            <span>⚕</span>
+                                            Atendimento
+                                          </button>
 
-                        <select name="status" aria-label="Alterar status">
+                                            <!-- ALTERAR STATUS -->
+                                            <form th:action="@{/agendamentos/{id}/status(id=${agendamento.id})}"
+                                                  method="post"
+                                                  class="form-status">
 
-                          <option value="Confirmado"
-                                  th:selected="${agendamento.status == 'Confirmado'}">
-                            Confirmado
-                          </option>
+                                                <select name="status" aria-label="Alterar status">
 
-                          <option value="Aguardando"
-                                  th:selected="${agendamento.status == 'Aguardando'}">
-                            Aguardando
-                          </option>
+                                                    <option value="Confirmado"
+                                                            th:selected="${agendamento.status == 'Confirmado'}">
+                                                        Confirmado
+                                                    </option>
 
-                          <option value="Em Atendimento"
-                                  th:selected="${agendamento.status == 'Em Atendimento'}">
-                            Em Atendimento
-                          </option>
+                                                    <option value="Aguardando"
+                                                            th:selected="${agendamento.status == 'Aguardando'}">
+                                                        Aguardando
+                                                    </option>
 
-                          <option value="Reagendado"
-                                  th:selected="${agendamento.status == 'Reagendado'}">
-                            Reagendado
-                          </option>
+                                                    <option value="Em Atendimento"
+                                                            th:selected="${agendamento.status == 'Em Atendimento'}">
+                                                        Em Atendimento
+                                                    </option>
 
-                          <option value="Concluído"
-                                  th:selected="${agendamento.status == 'Concluído'}">
-                            Concluído
-                          </option>
+                                                    <option value="Reagendado"
+                                                            th:selected="${agendamento.status == 'Reagendado'}">
+                                                        Reagendado
+                                                    </option>
 
-                        </select>
+                                                    <option value="Concluído"
+                                                            th:selected="${agendamento.status == 'Concluído'}">
+                                                        Concluído
+                                                    </option>
 
-                        <button type="submit">Salvar</button>
+                                                </select>
 
-                      </form>
+                                                <button type="submit">Salvar</button>
 
-
-                      <!-- CANCELAR AGENDAMENTO -->
-                      <form th:if="${agendamento.status != 'Cancelado'}"
-                            th:action="@{/agendamentos/{id}/cancelar(id=${agendamento.id})}"
-                            method="post"
-                            onsubmit="return confirm('Deseja cancelar este agendamento?');">
-
-                        <button type="submit" class="btn-cancelar">
-                          Cancelar
-                        </button>
-
-                      </form>
-
-                    </div>
-
-                  </td>
-
-                </tr>
+                                            </form>
 
 
-                <tr th:if="${#lists.isEmpty(agendamentos)}">
-                  <td colspan="7" class="sem-registros">
-                    Nenhum agendamento cadastrado.
-                  </td>
-                </tr>
+                                            <!-- CANCELAR AGENDAMENTO -->
+                                            <form th:if="${agendamento.status != 'Cancelado'}"
+                                                  th:action="@{/agendamentos/{id}/cancelar(id=${agendamento.id})}"
+                                                  method="post"
+                                                  onsubmit="return confirm('Deseja cancelar este agendamento?');">
 
-                </tbody>
+                                                <button type="submit" class="btn-cancelar">
+                                                    Cancelar
+                                                </button>
 
-              </table>
+                                            </form>
 
-            </div>
+                                        </div>
+
+                                    </td>
+
+                                </tr>
 
 
-            <!-- RODAPÉ DA TABELA -->
-            <div class="rodape-tabela">
+                                <tr th:if="${#lists.isEmpty(agendamentos)}">
+                                    <td colspan="7" class="sem-registros">
+                                        Nenhum agendamento cadastrado.
+                                    </td>
+                                </tr>
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+
+                        <!-- RODAPÉ DA TABELA -->
+                        <div class="rodape-tabela">
 
                             <span class="contagem"
                                   id="contadorAgendamentos"
@@ -341,506 +350,637 @@
                                 0 agendamentos
                             </span>
 
+                        </div>
+
+                    </section>
+
+
+                    <!-- COLUNA LATERAL -->
+                    <aside class="coluna-direita">
+
+
+                        <!-- NOVO AGENDAMENTO -->
+                        <section class="card-novo">
+
+                            <div class="card-novo-header">
+                                <span class="card-novo-titulo">⊕ Novo Agendamento</span>
+                            </div>
+
+
+                            <form class="form"
+                                  id="formAgendamento"
+                                  th:action="@{/agendamentos/cadastrar}"
+                                  method="post">
+
+                                <!-- PACIENTE -->
+                                <label class="label-form" for="pacienteId">
+                                    Paciente
+                                </label>
+
+                                <div class="campo-verde">
+
+                                    <select
+                                            id="pacienteId"
+                                            name="pacienteId"
+                                            class="input-paciente"
+                                            required>
+
+                                        <option value="">Selecione o paciente</option>
+
+                                        <option
+                                                th:each="paciente : ${pacientes}"
+                                                th:value="${paciente.id}"
+                                                th:text="${paciente.nome + ' - ' + paciente.cpf}">
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <!-- PROFISSIONAL -->
+                                <label class="label-form" for="profissionalId">
+                                    Profissional
+                                </label>
+
+                                <div class="campo-verde">
+
+                                    <select
+                                            id="profissionalId"
+                                            name="profissionalId"
+                                            class="input-paciente"
+                                            required>
+
+                                        <option value="">Selecione o profissional</option>
+
+                                        <option
+                                                th:each="profissional : ${profissionais}"
+                                                th:value="${profissional.id}"
+                                                th:text="${profissional.nome + ' - ' + profissional.especialidade}">
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <!-- DATA E HORÁRIO -->
+                                <div class="linha-data-hora">
+
+                                    <div>
+
+                                        <label class="label-form" for="dataAgendamento">
+                                            Data
+                                        </label>
+
+                                        <div class="campo-verde">
+
+                                            <input
+                                                    type="date"
+                                                    id="dataAgendamento"
+                                                    name="data"
+                                                    required>
+
+                                        </div>
+
+                                    </div>
+
+
+                                    <div>
+
+                                        <label class="label-form" for="hora">
+                                            Horário
+                                        </label>
+
+                                        <div class="campo-verde">
+
+                                            <div class="dropdown-hora" id="dropdownHora">
+
+                                                <button
+                                                        type="button"
+                                                        class="dropdown-hora-btn"
+                                                        id="horaBtn">
+                                                    Selecione o horário
+                                                </button>
+
+                                                <ul
+                                                        class="dropdown-hora-lista"
+                                                        id="horaLista">
+                                                </ul>
+
+                                                <input
+                                                        type="hidden"
+                                                        id="hora"
+                                                        name="hora">
+
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- OBSERVAÇÕES -->
+                                <label class="label-form" for="observacoes">
+                                    Observações
+                                </label>
+
+                                <div class="campo-verde">
+
+                                    <input
+                                            type="text"
+                                            id="observacoes"
+                                            name="observacoes"
+                                            class="input-paciente"
+                                            maxlength="500"
+                                            placeholder="Observações (opcional)">
+
+                                </div>
+
+
+                                <p class="field-hint">
+                                    Cada atendimento possui duração fixa de 30 minutos.
+                                </p>
+
+
+                                <button type="submit" class="btn-agendar">
+                                    📅 Agendar atendimento
+                                </button>
+
+                            </form>
+
+                        </section>
+
+
+                        <!-- AGENDA DO PROFISSIONAL -->
+                        <section class="card-calendario">
+
+                            <div class="cal-topo">
+                                <span class="cal-titulo">Agenda do profissional</span>
+                            </div>
+
+
+                            <div class="form">
+
+                                <label class="label-form" for="profissionalAgenda">
+                                    Profissional
+                                </label>
+
+                                <div class="campo-verde">
+
+                                    <select
+                                            id="profissionalAgenda"
+                                            class="input-paciente">
+
+                                        <option value="">Selecione o profissional</option>
+
+                                        <option
+                                                th:each="profissional : ${profissionais}"
+                                                th:value="${profissional.id}"
+                                                th:text="${profissional.nome}">
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <label class="label-form" for="dataAgenda">
+                                    Data da agenda
+                                </label>
+
+                                <div class="campo-verde">
+
+                                    <input
+                                            type="date"
+                                            id="dataAgenda">
+
+                                </div>
+
+
+                                <button
+                                        type="button"
+                                        id="btnConsultarAgenda"
+                                        class="btn-agendar">
+                                    Consultar agenda
+                                </button>
+
+                            </div>
+
+
+                            <div id="resultadoAgenda" class="resultado-agenda">
+                                <p>Selecione um profissional e uma data para consultar os atendimentos.</p>
+                            </div>
+
+                        </section>
+
+                    </aside>
+
+                </div>
+
             </div>
 
-          </section>
+        </main>
 
-
-          <!-- COLUNA LATERAL -->
-          <aside class="coluna-direita">
-
-
-            <!-- NOVO AGENDAMENTO -->
-            <section class="card-novo">
-
-              <div class="card-novo-header">
-                <span class="card-novo-titulo">⊕ Novo Agendamento</span>
-              </div>
-
-
-              <form class="form"
-                    id="formAgendamento"
-                    th:action="@{/agendamentos/cadastrar}"
-                    method="post">
-
-                <!-- PACIENTE -->
-                <label class="label-form" for="pacienteId">
-                  Paciente
-                </label>
-
-                <div class="campo-verde">
-
-                  <select
-                          id="pacienteId"
-                          name="pacienteId"
-                          class="input-paciente"
-                          required>
-
-                    <option value="">Selecione o paciente</option>
-
-                    <option
-                            th:each="paciente : ${pacientes}"
-                            th:value="${paciente.id}"
-                            th:text="${paciente.nome + ' - ' + paciente.cpf}">
-                    </option>
-
-                  </select>
-
-                </div>
-
-
-                <!-- PROFISSIONAL -->
-                <label class="label-form" for="profissionalId">
-                  Profissional
-                </label>
-
-                <div class="campo-verde">
-
-                  <select
-                          id="profissionalId"
-                          name="profissionalId"
-                          class="input-paciente"
-                          required>
-
-                    <option value="">Selecione o profissional</option>
-
-                    <option
-                            th:each="profissional : ${profissionais}"
-                            th:value="${profissional.id}"
-                            th:text="${profissional.nome + ' - ' + profissional.especialidade}">
-                    </option>
-
-                  </select>
-
-                </div>
-
-
-                <!-- DATA E HORÁRIO -->
-                <div class="linha-data-hora">
-
-                  <div>
-
-                    <label class="label-form" for="dataAgendamento">
-                      Data
-                    </label>
-
-                    <div class="campo-verde">
-
-                      <input
-                              type="date"
-                              id="dataAgendamento"
-                              name="data"
-                              required>
-
-                    </div>
-
-                  </div>
-
-
-                  <div>
-
-                    <label class="label-form" for="hora">
-                      Horário
-                    </label>
-
-                    <div class="campo-verde">
-
-                      <div class="dropdown-hora" id="dropdownHora">
-
-                        <button
-                                type="button"
-                                class="dropdown-hora-btn"
-                                id="horaBtn">
-                          Selecione o horário
-                        </button>
-
-                        <ul
-                                class="dropdown-hora-lista"
-                                id="horaLista">
-                        </ul>
-
-                        <input
-                                type="hidden"
-                                id="hora"
-                                name="hora">
-
-                      </div>
-
-                    </div>
-
-                  </div>
-
-                </div>
-
-
-                <!-- OBSERVAÇÕES -->
-                <label class="label-form" for="observacoes">
-                  Observações
-                </label>
-
-                <div class="campo-verde">
-
-                  <input
-                          type="text"
-                          id="observacoes"
-                          name="observacoes"
-                          class="input-paciente"
-                          maxlength="500"
-                          placeholder="Observações (opcional)">
-
-                </div>
-
-
-                <p class="field-hint">
-                  Cada atendimento possui duração fixa de 30 minutos.
-                </p>
-
-
-                <button type="submit" class="btn-agendar">
-                  📅 Agendar atendimento
-                </button>
-
-              </form>
-
-            </section>
-
-
-            <!-- AGENDA DO PROFISSIONAL -->
-            <section class="card-calendario">
-
-              <div class="cal-topo">
-                <span class="cal-titulo">Agenda do profissional</span>
-              </div>
-
-
-              <div class="form">
-
-                <label class="label-form" for="profissionalAgenda">
-                  Profissional
-                </label>
-
-                <div class="campo-verde">
-
-                  <select
-                          id="profissionalAgenda"
-                          class="input-paciente">
-
-                    <option value="">Selecione o profissional</option>
-
-                    <option
-                            th:each="profissional : ${profissionais}"
-                            th:value="${profissional.id}"
-                            th:text="${profissional.nome}">
-                    </option>
-
-                  </select>
-
-                </div>
-
-
-                <label class="label-form" for="dataAgenda">
-                  Data da agenda
-                </label>
-
-                <div class="campo-verde">
-
-                  <input
-                          type="date"
-                          id="dataAgenda">
-
-                </div>
-
-
-                <button
-                        type="button"
-                        id="btnConsultarAgenda"
-                        class="btn-agendar">
-                  Consultar agenda
-                </button>
-
-              </div>
-
-
-              <div id="resultadoAgenda" class="resultado-agenda">
-                <p>Selecione um profissional e uma data para consultar os atendimentos.</p>
-              </div>
-
-            </section>
-
-          </aside>
-
-        </div>
-
-      </div>
-
-    </main>
-
-  </div>
+    </div>
 
 </div>
-
+<!-- CONTAINER DO MODAL DE CONSULTA -->
+<div id="consultaModalContainer"></div>
 
 <script>
 
-  document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () {
+
+        // ==========================================
+        // CADASTRO DE AGENDAMENTO
+        // ==========================================
+
+        const formulario = document.getElementById('formAgendamento');
+        const campoData = document.getElementById('dataAgendamento');
+        const campoHora = document.getElementById('hora');
+
+        const hoje = new Date();
+        const ano = hoje.getFullYear();
+        const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+        const dia = String(hoje.getDate()).padStart(2, '0');
+
+        campoData.min = `${ano}-${mes}-${dia}`;
+
+        formulario.addEventListener('submit', function (event) {
+
+            const data = campoData.value;
+            const horario = campoHora.value;
+
+            if (!data || !horario) {
+
+                event.preventDefault();
+
+                alert('Informe a data e o horário do atendimento.');
+
+                return;
+            }
+
+        });
+
+
+        // ==========================================
+        // DROPDOWN DE HORÁRIOS
+        // ==========================================
+
+        const dropdown = document.getElementById('dropdownHora');
+        const btnHora = document.getElementById('horaBtn');
+        const listaHora = document.getElementById('horaLista');
+
+        // Gera horários de 30 em 30 minutos.
+        for (let h = 0; h < 24; h++) {
+
+            for (const m of ['00', '30']) {
+
+                const horario = `${String(h).padStart(2, '0')}:${m}`;
+
+                const item = document.createElement('li');
+
+                item.textContent = horario;
+
+                item.addEventListener('click', function () {
+
+                    campoHora.value = horario;
+                    btnHora.textContent = horario;
+
+                    listaHora.classList.remove('aberta');
+
+                });
+
+                listaHora.appendChild(item);
+
+            }
+
+        }
+
+
+        // Abre e fecha a lista de horários.
+        btnHora.addEventListener('click', function () {
+
+            listaHora.classList.toggle('aberta');
+
+        });
+
+
+        // Fecha ao clicar fora do dropdown.
+        document.addEventListener('click', function (event) {
+
+            if (!dropdown.contains(event.target)) {
+
+                listaHora.classList.remove('aberta');
+
+            }
+
+        });
+
+
+        // ==========================================
+        // BUSCA E FILTRO DA TABELA
+        // ==========================================
+
+        const campoBusca = document.getElementById('campoBusca');
+        const filtroEspecialidade = document.getElementById('filtroEspecialidade');
+
+        const linhas = document.querySelectorAll('.linha-agendamento');
+
+        const contador = document.getElementById('contadorAgendamentos');
+
+        function filtrarAgendamentos() {
+
+            const termo = campoBusca.value.toLowerCase().trim();
+
+            const especialidade = filtroEspecialidade.value.toLowerCase();
+
+            let quantidade = 0;
+
+            linhas.forEach(function (linha) {
+
+                const paciente = (linha.dataset.paciente || '').toLowerCase();
+
+                const cpf = (linha.dataset.cpf || '').toLowerCase();
+
+                const profissional = (linha.dataset.profissional || '').toLowerCase();
+
+                const esp = (linha.dataset.especialidade || '').toLowerCase();
+
+
+                const correspondeBusca =
+                    paciente.includes(termo) ||
+                    cpf.includes(termo) ||
+                    profissional.includes(termo);
+
+
+                const correspondeEspecialidade =
+                    !especialidade || esp === especialidade;
+
+
+                const exibir = correspondeBusca && correspondeEspecialidade;
+
+                linha.style.display = exibir ? '' : 'none';
+
+                if (exibir) {
+                    quantidade++;
+                }
+
+            });
+
+            contador.textContent = quantidade + ' agendamento(s) encontrado(s)';
+
+        }
+
+        campoBusca.addEventListener('input', filtrarAgendamentos);
+
+        filtroEspecialidade.addEventListener('change', filtrarAgendamentos);
+
+
+        // ==========================================
+        // CONSULTAR AGENDA DO PROFISSIONAL
+        // ==========================================
+
+        const btnConsultar = document.getElementById('btnConsultarAgenda');
+
+        const resultadoAgenda = document.getElementById('resultadoAgenda');
+
+        btnConsultar.addEventListener('click', async function () {
+
+            const profissionalId = document.getElementById('profissionalAgenda').value;
+
+            const data = document.getElementById('dataAgenda').value;
+
+
+            if (!profissionalId || !data) {
+
+                resultadoAgenda.textContent = 'Selecione o profissional e a data.';
+
+                return;
+
+            }
+
+
+            resultadoAgenda.textContent = 'Carregando agenda...';
+
+
+            try {
+
+                const resposta = await fetch(
+                    `/agendamentos/agenda-profissional?profissionalId=${encodeURIComponent(profissionalId)}&data=${encodeURIComponent(data)}`
+                );
+
+
+                if (!resposta.ok) {
+
+                    throw new Error('Não foi possível consultar a agenda.');
+
+                }
+
+
+                const agendamentos = await resposta.json();
+
+                resultadoAgenda.innerHTML = '';
+
+
+                if (agendamentos.length === 0) {
+
+                    resultadoAgenda.textContent = 'Nenhum atendimento para esta data.';
+
+                    return;
+
+                }
+
+
+                agendamentos.forEach(function (agendamento) {
+
+                    const item = document.createElement('div');
+
+                    item.className = 'item-agenda';
+
+
+                    // LocalDateTime serializado pelo Spring.
+                    const dataHora = agendamento.dataHora;
+
+                    const horarioInicio = dataHora.substring(11, 16);
+
+
+                    // Atendimento possui duração fixa de 30 minutos.
+                    const [hora, minuto] = horarioInicio.split(':').map(Number);
+
+                    const totalMinutos = hora * 60 + minuto + 30;
+
+                    const horaFim = String(Math.floor(totalMinutos / 60) % 24).padStart(2, '0');
+
+                    const minutoFim = String(totalMinutos % 60).padStart(2, '0');
+
+                    const horarioFim = `${horaFim}:${minutoFim}`;
+
+
+                    const paciente = document.createElement('strong');
+
+                    paciente.textContent = agendamento.pacienteNome;
+
+
+                    const horario = document.createElement('span');
+
+                    horario.textContent = `${horarioInicio} - ${horarioFim}`;
+
+
+                    const status = document.createElement('small');
+
+                    status.textContent = agendamento.status;
+
+
+                    item.append(horario, paciente, status);
+
+                    resultadoAgenda.appendChild(item);
+
+                });
+
+            } catch (erro) {
+
+                resultadoAgenda.textContent = erro.message;
+
+            }
+
+        });
+
+    });
+    // ==========================================
+    // MODAL DE ATENDIMENTO
+    // ==========================================
+
+    const modalContainer = document.getElementById('consultaModalContainer');
+
+    document.addEventListener('click', async function (event) {
+
+      const botaoAtendimento = event.target.closest('.btn-consulta');
+
+      if (botaoAtendimento) {
+
+        const url = botaoAtendimento.dataset.modalUrl;
+
+        modalContainer.innerHTML = '<div class="modal-loading">Carregando atendimento...</div>';
+
+        try {
+
+          const resposta = await fetch(url, {
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          });
+
+          if (!resposta.ok) {
+            throw new Error('Não foi possível carregar o atendimento.');
+          }
+
+          const html = await resposta.text();
+
+          modalContainer.innerHTML = html;
+
+          const modal = modalContainer.querySelector('.modal-overlay');
+
+          if (modal) {
+            modal.classList.add('aberto');
+            document.body.classList.add('modal-aberto');
+          }
+
+        } catch (erro) {
+
+          modalContainer.innerHTML = '';
+
+          alert(erro.message);
+
+        }
+      }
+
+      // FECHAR MODAL
+      if (
+              event.target.closest('[data-fechar-modal]') ||
+              event.target.classList.contains('modal-overlay')
+      ) {
+
+        modalContainer.innerHTML = '';
+        document.body.classList.remove('modal-aberto');
+
+      }
+
+    });
 
     // ==========================================
-    // CADASTRO DE AGENDAMENTO
+    // ENVIAR FORMULÁRIOS DO MODAL VIA AJAX
     // ==========================================
 
-    const formulario = document.getElementById('formAgendamento');
-    const campoData = document.getElementById('dataAgendamento');
-    const campoHora = document.getElementById('hora');
+    document.addEventListener('submit', async function (event) {
 
-    const hoje = new Date();
-    const ano = hoje.getFullYear();
-    const mes = String(hoje.getMonth() + 1).padStart(2, '0');
-    const dia = String(hoje.getDate()).padStart(2, '0');
+        const formularioModal = event.target.closest('.consulta-modal-form');
 
-    campoData.min = `${ano}-${mes}-${dia}`;
-
-    formulario.addEventListener('submit', function (event) {
-
-      const data = campoData.value;
-      const horario = campoHora.value;
-
-      if (!data || !horario) {
+        if (!formularioModal) {
+            return;
+        }
 
         event.preventDefault();
 
-        alert('Informe a data e o horário do atendimento.');
+        const botao = formularioModal.querySelector('button[type="submit"]');
 
-        return;
-      }
-
-    });
-
-
-    // ==========================================
-    // DROPDOWN DE HORÁRIOS
-    // ==========================================
-
-    const dropdown = document.getElementById('dropdownHora');
-    const btnHora = document.getElementById('horaBtn');
-    const listaHora = document.getElementById('horaLista');
-
-    // Gera horários de 30 em 30 minutos.
-    for (let h = 0; h < 24; h++) {
-
-      for (const m of ['00', '30']) {
-
-        const horario = `${String(h).padStart(2, '0')}:${m}`;
-
-        const item = document.createElement('li');
-
-        item.textContent = horario;
-
-        item.addEventListener('click', function () {
-
-          campoHora.value = horario;
-          btnHora.textContent = horario;
-
-          listaHora.classList.remove('aberta');
-
-        });
-
-        listaHora.appendChild(item);
-
-      }
-
-    }
-
-
-    // Abre e fecha a lista de horários.
-    btnHora.addEventListener('click', function () {
-
-      listaHora.classList.toggle('aberta');
-
-    });
-
-
-    // Fecha ao clicar fora do dropdown.
-    document.addEventListener('click', function (event) {
-
-      if (!dropdown.contains(event.target)) {
-
-        listaHora.classList.remove('aberta');
-
-      }
-
-    });
-
-
-    // ==========================================
-    // BUSCA E FILTRO DA TABELA
-    // ==========================================
-
-    const campoBusca = document.getElementById('campoBusca');
-    const filtroEspecialidade = document.getElementById('filtroEspecialidade');
-
-    const linhas = document.querySelectorAll('.linha-agendamento');
-
-    const contador = document.getElementById('contadorAgendamentos');
-
-    function filtrarAgendamentos() {
-
-      const termo = campoBusca.value.toLowerCase().trim();
-
-      const especialidade = filtroEspecialidade.value.toLowerCase();
-
-      let quantidade = 0;
-
-      linhas.forEach(function (linha) {
-
-        const paciente = (linha.dataset.paciente || '').toLowerCase();
-
-        const cpf = (linha.dataset.cpf || '').toLowerCase();
-
-        const profissional = (linha.dataset.profissional || '').toLowerCase();
-
-        const esp = (linha.dataset.especialidade || '').toLowerCase();
-
-
-        const correspondeBusca =
-                paciente.includes(termo) ||
-                cpf.includes(termo) ||
-                profissional.includes(termo);
-
-
-        const correspondeEspecialidade =
-                !especialidade || esp === especialidade;
-
-
-        const exibir = correspondeBusca && correspondeEspecialidade;
-
-        linha.style.display = exibir ? '' : 'none';
-
-        if (exibir) {
-          quantidade++;
+        if (botao) {
+            botao.disabled = true;
+            botao.textContent = 'Processando...';
         }
 
-      });
+        try {
 
-      contador.textContent = quantidade + ' agendamento(s) encontrado(s)';
+            const resposta = await fetch(formularioModal.action, {
+                method: 'POST',
+                body: new FormData(formularioModal),
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
 
-    }
+            if (!resposta.ok) {
+                throw new Error('Não foi possível processar o atendimento.');
+            }
 
-    campoBusca.addEventListener('input', filtrarAgendamentos);
+            const html = await resposta.text();
 
-    filtroEspecialidade.addEventListener('change', filtrarAgendamentos);
+            modalContainer.innerHTML = html;
 
+            const modalAtualizado = modalContainer.querySelector('.modal-overlay');
 
-    // ==========================================
-    // CONSULTAR AGENDA DO PROFISSIONAL
-    // ==========================================
+            if (modalAtualizado) {
+                modalAtualizado.classList.add('aberto');
+                document.body.classList.add('modal-aberto');
+            }
 
-    const btnConsultar = document.getElementById('btnConsultarAgenda');
+        } catch (erro) {
 
-    const resultadoAgenda = document.getElementById('resultadoAgenda');
+            alert(erro.message);
 
-    btnConsultar.addEventListener('click', async function () {
-
-      const profissionalId = document.getElementById('profissionalAgenda').value;
-
-      const data = document.getElementById('dataAgenda').value;
-
-
-      if (!profissionalId || !data) {
-
-        resultadoAgenda.textContent = 'Selecione o profissional e a data.';
-
-        return;
-
-      }
-
-
-      resultadoAgenda.textContent = 'Carregando agenda...';
-
-
-      try {
-
-        const resposta = await fetch(
-                `/agendamentos/agenda-profissional?profissionalId=${encodeURIComponent(profissionalId)}&data=${encodeURIComponent(data)}`
-        );
-
-
-        if (!resposta.ok) {
-
-          throw new Error('Não foi possível consultar a agenda.');
+            if (botao) {
+                botao.disabled = false;
+                botao.textContent = 'Tentar novamente';
+            }
 
         }
 
+    });
 
-        const agendamentos = await resposta.json();
+    // FECHAR COM ESC
+    document.addEventListener('keydown', function (event) {
 
-        resultadoAgenda.innerHTML = '';
+      if (event.key === 'Escape') {
 
-
-        if (agendamentos.length === 0) {
-
-          resultadoAgenda.textContent = 'Nenhum atendimento para esta data.';
-
-          return;
-
-        }
-
-
-        agendamentos.forEach(function (agendamento) {
-
-          const item = document.createElement('div');
-
-          item.className = 'item-agenda';
-
-
-          // LocalDateTime serializado pelo Spring.
-          const dataHora = agendamento.dataHora;
-
-          const horarioInicio = dataHora.substring(11, 16);
-
-
-          // Atendimento possui duração fixa de 30 minutos.
-          const [hora, minuto] = horarioInicio.split(':').map(Number);
-
-          const totalMinutos = hora * 60 + minuto + 30;
-
-          const horaFim = String(Math.floor(totalMinutos / 60) % 24).padStart(2, '0');
-
-          const minutoFim = String(totalMinutos % 60).padStart(2, '0');
-
-          const horarioFim = `${horaFim}:${minutoFim}`;
-
-
-          const paciente = document.createElement('strong');
-
-          paciente.textContent = agendamento.pacienteNome;
-
-
-          const horario = document.createElement('span');
-
-          horario.textContent = `${horarioInicio} - ${horarioFim}`;
-
-
-          const status = document.createElement('small');
-
-          status.textContent = agendamento.status;
-
-
-          item.append(horario, paciente, status);
-
-          resultadoAgenda.appendChild(item);
-
-        });
-
-      } catch (erro) {
-
-        resultadoAgenda.textContent = erro.message;
+        modalContainer.innerHTML = '';
+        document.body.classList.remove('modal-aberto');
 
       }
 
     });
-
-  });
-
 </script>
 
 </body>
