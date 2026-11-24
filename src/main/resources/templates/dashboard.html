@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" th:href="@{/css/dashboard-pacientes.css}">
+    <link rel="stylesheet" th:href="@{/css/paciente-form.css}">
 </head>
 
 <body>
@@ -510,11 +511,7 @@
                  th:text="${erro}">
             </div>
 
-            <box border radius="lg" padding={3} gap={3}>
-                <box background="surface-secondary" radius="md" padding={3} gap={1}>
-                    <text size="sm" color="secondary">Informe um CPF válido para cadastrar o paciente.</text>
-                </box>
-            </box>
+           <p class="form-hint">Informe um CPF válido para cadastrar o paciente.</p>
 
             <form class="patient-form"
                   th:action="@{/pacientes}"
@@ -526,37 +523,25 @@
                 <div class="form-group">
 
                     <label for="new-name">Nome completo</label>
+                    <small class="field-error" id="erro-nome"></small>
 
-                    <input
-                            type="text"
-                            id="new-name"
-                            name="nome"
-                            placeholder="Digite o nome completo"
-                            maxlength="120"
-                            th:value="${pacienteForm != null ? pacienteForm.nome : ''}"
-                            required>
-
-                </div>
-
+                  <input type="text" id="new-name" name="nome" placeholder="Digite o nome completo"
+       maxlength="120" autocomplete="off" required
+       th:value="${pacienteForm != null ? pacienteForm.nome : ''}">
 
                 <div class="form-row">
 
                     <div class="form-group">
-
-                        <label for="new-cpf">CPF</label>
-
-                        <input
-                                type="text"
-                                id="new-cpf"
-                                name="cpf"
-                                placeholder="000.000.000-00"
-                                required>
-
-                    </div>
+    <label for="new-cpf">CPF</label>
+    <input type="text" id="new-cpf" name="cpf" placeholder="000.000.000-00"
+           inputmode="numeric" maxlength="14" autocomplete="off" required>
+    <small class="field-error" id="erro-cpf"></small>
+</div>
 
                     <div class="form-group">
 
                         <label for="new-birth">Data de nascimento</label>
+                        <small class="field-error" id="erro-data"></small>
 
                         <input
                                 type="date"
@@ -601,36 +586,22 @@
 
                     </div>
 
-                    <div class="form-group">
-
-                        <label for="new-phone">Telefone</label>
-
-                        <input
-                                type="tel"
-                                id="new-phone"
-                                name="telefone"
-                                placeholder="(00) 00000-0000"
-                                th:value="${pacienteForm != null ? pacienteForm.telefone : ''}">
-
-                    </div>
-
-                </div>
+                   <div class="form-group">
+    <label for="new-phone">Telefone</label>
+    <input type="tel" id="new-phone" name="telefone" placeholder="(00) 00000-0000"
+           inputmode="tel" maxlength="15" autocomplete="off"
+           th:value="${pacienteForm != null ? pacienteForm.telefone : ''}">
+    <small class="field-error" id="erro-telefone"></small>
+</div>
 
 
                 <div class="form-group">
-
-                    <label for="new-email">E-mail</label>
-
-                    <input
-                            type="email"
-                            id="new-email"
-                            name="email"
-                            placeholder="paciente@email.com"
-                            maxlength="160"
-                            th:value="${pacienteForm != null ? pacienteForm.email : ''}">
-
-                </div>
-
+    <label for="new-email">E-mail</label>
+    <input type="email" id="new-email" name="email" placeholder="paciente@email.com"
+           maxlength="160" autocomplete="off"
+           th:value="${pacienteForm != null ? pacienteForm.email : ''}">
+    <small class="field-error" id="erro-email"></small>
+</div>
 
                 <!-- ENDEREÇO -->
                 <h3>Endereço</h3>
@@ -679,17 +650,12 @@
 
 
                 <div class="form-group">
-
-                    <label for="new-cep">CEP</label>
-
-                    <input
-                            type="text"
-                            id="new-cep"
-                            name="cep"
-                            placeholder="00000-000"
-                            th:value="${pacienteForm != null ? pacienteForm.cep : ''}">
-
-                </div>
+    <label for="new-cep">CEP</label>
+    <input type="text" id="new-cep" name="cep" placeholder="00000-000"
+           inputmode="numeric" maxlength="9" autocomplete="off"
+           th:value="${pacienteForm != null ? pacienteForm.cep : ''}">
+    <small class="field-error" id="erro-cep"></small>
+</div>
 
 
                 <!-- AÇÕES -->
@@ -732,6 +698,109 @@
             });
         });
     });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const form = document.querySelector(".patient-form");
+    if (!form) return;
+
+    const nome = document.getElementById("new-name");
+    const cpf = document.getElementById("new-cpf");
+    const telefone = document.getElementById("new-phone");
+    const email = document.getElementById("new-email");
+    const cep = document.getElementById("new-cep");
+    const dataNasc = document.getElementById("new-birth");
+
+    // Máscaras enquanto digita
+    function mascara(campo, padrao) {
+        campo.addEventListener("input", function () {
+            let v = this.value.replace(/\D/g, "");
+            let out = "";
+            let i = 0;
+            for (const p of padrao) {
+                if (i >= v.length) break;
+                if (p === "#") { out += v[i++]; }
+                else { out += p; }
+            }
+            this.value = out;
+        });
+    }
+
+    mascara(cpf, "###.###.###-##");
+    mascara(cep, "#####-###");
+    mascara(telefone, "(##) #####-####");
+
+    // Nome: só letras, espaços, acentos e apóstrofo
+    nome.addEventListener("input", function () {
+        this.value = this.value.replace(/[^A-Za-zÀ-ÿ' ]/g, "");
+    });
+
+    // Validação de CPF (dígitos verificadores)
+    function cpfValido(valor) {
+        const n = valor.replace(/\D/g, "");
+        if (n.length !== 11 || /^(\d)\1{10}$/.test(n)) return false;
+        for (let t = 9; t < 11; t++) {
+            let soma = 0;
+            for (let i = 0; i < t; i++) soma += n[i] * (t + 1 - i);
+            const dig = ((soma * 10) % 11) % 10;
+            if (dig !== Number(n[t])) return false;
+        }
+        return true;
+    }
+
+    function mostraErro(id, msg) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = msg;
+        return msg === "";
+    }
+
+    function validaCampos() {
+        let ok = true;
+
+        // Nome: pelo menos nome e sobrenome
+        const partes = nome.value.trim().split(/\s+/).filter(Boolean);
+        ok = mostraErro("erro-nome", partes.length < 2 ? "Informe nome e sobrenome." : "") && ok;
+
+        ok = mostraErro("erro-cpf", cpfValido(cpf.value) ? "" : "CPF inválido.") && ok;
+
+        const tel = telefone.value.replace(/\D/g, "");
+        if (tel.length > 0) {
+            ok = mostraErro("erro-telefone", tel.length >= 10 ? "" : "Telefone incompleto.") && ok;
+        } else {
+            mostraErro("erro-telefone", "");
+        }
+
+        if (email.value.length > 0) {
+            ok = mostraErro("erro-email", email.validity.valid ? "" : "E-mail inválido.") && ok;
+        } else {
+            mostraErro("erro-email", "");
+        }
+
+        if (cep.value.length > 0) {
+            ok = mostraErro("erro-cep", cep.value.replace(/\D/g, "").length === 8 ? "" : "CEP incompleto.") && ok;
+        } else {
+            mostraErro("erro-cep", "");
+        }
+
+        // Data de nascimento não pode ser futura
+        if (dataNasc.value) {
+            const hoje = new Date().toISOString().slice(0, 10);
+            ok = mostraErro("erro-data", dataNasc.value <= hoje ? "" : "Data não pode ser futura.") && ok;
+        }
+
+        return ok;
+    }
+
+    form.addEventListener("submit", function (e) {
+        if (!validaCampos()) e.preventDefault();
+    });
+
+    // Limpa o erro enquanto o usuário corrige
+    form.querySelectorAll("input, select").forEach(function (el) {
+        el.addEventListener("input", validaCampos);
+    });
+});
 </script>
 
 </body>

@@ -309,4 +309,72 @@ body {
             transform: translateY(0);
         }
     }
+    /* ==============================
+   CAMPO DE SENHA COM ÍCONES
+============================== */
+
+.senha-campo {
+    display: flex;
+    align-items: center;
+    height: 46px;
+    border: 1px solid #d9dfdb;
+    border-radius: 9px;
+    background: #fff;
+    overflow: hidden;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.senha-campo:focus-within {
+    border-color: #60937b;
+    box-shadow: 0 0 0 .2rem rgba(49, 95, 78, .12);
+}
+
+.senha-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 100%;
+    color: #7d8a83;
+    flex-shrink: 0;
+}
+
+.senha-input {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    border: none;
+    outline: none;
+    padding: 0 6px 0 0;
+    background: transparent;
+    font: inherit;
+    font-size: .84rem;
+    color: #26342e;
+    text-overflow: ellipsis;
+}
+
+.senha-input::placeholder {
+    color: #a6aea9;
+    opacity: 1;
+}
+
+.senha-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 100%;
+    flex-shrink: 0;
+    border: none;
+    border-left: 1px solid #e3e9e5;
+    background: #fafcfb;
+    color: #5f6f67;
+    cursor: pointer;
+    transition: background .2s ease;
+}
+
+.senha-toggle:hover {
+    background: #eef4f0;
+}
+
 }
