@@ -1378,3 +1378,293 @@ button {
         border: 1px solid #efc1c1;
     }
 }
+
+
+/* ==========================================
+   FORMULÁRIO DE CADASTRO DE PACIENTES
+========================================== */
+
+.patient-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+/* Títulos das seções */
+.patient-form h3 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 12px 0 2px;
+    padding-bottom: 11px;
+    border-bottom: 1px solid #e7ece9;
+    color: #315f4e;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.patient-form h3:first-child {
+    margin-top: 0;
+}
+
+/* Organização dos campos */
+.patient-form .form-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.patient-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+}
+
+/* Rótulos */
+.patient-form .form-group label {
+    color: #52665b;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Campos de entrada */
+.patient-form input,
+.patient-form select {
+    width: 100%;
+    height: 45px;
+    padding: 0 13px;
+    border: 1px solid #dce6df;
+    border-radius: 9px;
+    outline: none;
+    background: #f8faf9;
+    color: #263a32;
+    font-family: inherit;
+    font-size: 12px;
+    transition: border-color .2s ease,
+    box-shadow .2s ease,
+    background .2s ease;
+}
+
+/* Placeholder */
+.patient-form input::placeholder {
+    color: #a2afa7;
+}
+
+/* Foco nos campos */
+.patient-form input:focus,
+.patient-form select:focus {
+    border-color: #315f4e;
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(49, 95, 78, .10);
+}
+
+/* Campo inválido */
+.patient-form input:invalid:not(:placeholder-shown) {
+    border-color: #d77a7a;
+}
+
+/* Seção de botões */
+.patient-form .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+    padding-top: 20px;
+    border-top: 1px solid #e7ece9;
+}
+
+/* Botões */
+.patient-form .form-actions .primary-button,
+.patient-form .form-actions .secondary-button {
+    min-height: 44px;
+    padding: 0 20px;
+    border-radius: 9px;
+    font-size: 12px;
+    transition: all .2s ease;
+}
+
+.patient-form .form-actions .primary-button {
+    box-shadow: 0 4px 10px rgba(49, 95, 78, .15);
+}
+
+.patient-form .form-actions .primary-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(49, 95, 78, .22);
+}
+
+.patient-form .form-actions .secondary-button:hover {
+    border-color: #315f4e;
+    color: #315f4e;
+}
+
+/* Responsividade do formulário */
+@media (max-width: 600px) {
+    .patient-form .form-row {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .patient-form .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .patient-form .form-actions .primary-button,
+    .patient-form .form-actions .secondary-button {
+        width: 100%;
+    }
+}
+
+/* ==========================================
+   FICHA / DETALHES DO PACIENTE
+========================================== */
+
+.patient-details {
+    background: #ffffff;
+    border: 1px solid #e3ebe6;
+    border-radius: 15px;
+    padding: 28px;
+}
+
+/* Cabeçalho da ficha */
+.patient-details .panel-heading {
+    padding: 0 0 22px;
+    border-bottom: 1px solid #edf1ee;
+}
+
+.patient-details .panel-heading h2 {
+    color: #263d32;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.patient-details .panel-heading p {
+    margin-top: 5px;
+    color: #84948a;
+    font-size: 11px;
+}
+
+/* Identificação do paciente */
+.patient-details .patient-profile {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 22px 0 28px;
+}
+
+.patient-details .patient-avatar {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #e8f2ec;
+    color: #315f4e;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.patient-details .patient-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.patient-details .patient-summary strong {
+    color: #263d32;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.patient-details .patient-summary span {
+    color: #84948a;
+    font-size: 11px;
+}
+
+/* Área das informações */
+.patient-details .patient-information {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* Títulos das seções */
+.patient-details .patient-information h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 0 2px;
+    padding-bottom: 11px;
+    border-bottom: 1px solid #e8eee9;
+    color: #315f4e;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.patient-details .patient-information h3:first-child {
+    margin-top: 0;
+}
+
+/* Organização dos dados */
+.patient-details .patient-information .form-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+/* Cartões individuais */
+.patient-details .patient-information .form-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    min-width: 0;
+    padding: 13px 15px;
+    border: 1px solid #e8eee9;
+    border-radius: 10px;
+    background: #f8faf9;
+    transition: border-color .2s ease,
+    background .2s ease;
+}
+
+.patient-details .patient-information .form-group:hover {
+    border-color: #cbded1;
+    background: #f4f8f5;
+}
+
+/* Nome dos campos */
+.patient-details .patient-information .form-group label {
+    color: #87958c;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/* Valores */
+.patient-details .patient-information .form-group p {
+    margin: 0;
+    color: #30483b;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+/* Registro no sistema */
+.patient-details .patient-information h3:last-of-type {
+    margin-top: 10px;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+    .patient-details {
+        padding: 18px;
+    }
+
+    .patient-details .patient-information .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+

@@ -1,13 +1,28 @@
+
+/* =========================================
+   MEDCARE — TELA DE LOGIN
+========================================= */
+
 :root {
     --green: #315f4e;
     --green-dark: #285442;
     --mint: #a9e7ca;
     --ink: #26342e;
     --muted: #738078;
+    --border: #d9dfdb;
+    --surface: #ffffff;
+    --background: #f8faf8;
 }
 
-* {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
+}
+
+html,
+body {
+    min-height: 100%;
 }
 
 body {
@@ -15,24 +30,37 @@ body {
     margin: 0;
     font-family: 'DM Sans', sans-serif;
     color: var(--ink);
-    background: #f8faf8;
+    background: var(--background);
 }
 
+/* =========================================
+   ESTRUTURA PRINCIPAL
+========================================= */
+
 .login-shell {
-    min-height: 100vh;
     display: grid;
     grid-template-columns: minmax(380px, 1fr) minmax(480px, 1fr);
+    width: 100%;
+    min-height: 100vh;
 }
+
+/* =========================================
+   PAINEL INSTITUCIONAL
+========================================= */
 
 .brand-panel {
     position: relative;
     isolation: isolate;
     overflow: hidden;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
+    min-height: 100vh;
     padding: 4rem 2rem;
-    color: white;
+
+    color: #ffffff;
     background: linear-gradient(145deg, #2d5d4b, #477e68);
 }
 
@@ -41,11 +69,15 @@ body {
     content: '';
     position: absolute;
     z-index: -1;
+
     width: 330px;
     height: 330px;
+
     border: 20px solid rgba(180, 239, 211, .10);
     border-radius: 48% 4% 48% 4%;
+
     transform: rotate(42deg);
+    pointer-events: none;
 }
 
 .brand-panel::before {
@@ -61,11 +93,13 @@ body {
 }
 
 .brand-content {
+    width: 100%;
     max-width: 560px;
     text-align: center;
 }
 
 .brand-mark {
+    display: block;
     width: 92px;
     height: 92px;
     margin: 0 auto 12px;
@@ -74,6 +108,7 @@ body {
 
 .brand-name {
     margin: 0;
+    color: #ffffff;
     font-size: clamp(3.2rem, 6vw, 4.6rem);
     font-weight: 700;
     letter-spacing: -3px;
@@ -86,6 +121,7 @@ body {
 
 .brand-tagline {
     margin: 12px 0 0;
+    color: #ffffff;
     font-size: clamp(1rem, 1.8vw, 1.3rem);
     font-weight: 400;
 }
@@ -103,23 +139,35 @@ body {
     font-size: 1.05rem;
 }
 
+/* =========================================
+   PAINEL DO FORMULÁRIO
+========================================= */
+
 .form-panel {
     display: grid;
     place-items: center;
+
+    min-width: 0;
+    min-height: 100vh;
     padding: 2rem;
 }
 
 .login-card {
     width: min(100%, 465px);
     padding: clamp(2rem, 4vw, 3.1rem);
+
     border: 1px solid #edf0ed;
     border-radius: 22px;
-    background: #fff;
+
+    background: var(--surface);
     box-shadow: 0 16px 45px rgba(35, 55, 44, .13);
+
+    animation: arrive .45s ease-out both;
 }
 
 .card-heading {
     margin: 0;
+    color: var(--ink);
     text-align: center;
     font-size: 1.55rem;
     font-weight: 700;
@@ -128,48 +176,55 @@ body {
 
 .card-subheading {
     margin: 5px 0 30px;
-    text-align: center;
     color: var(--muted);
+    text-align: center;
     font-size: .92rem;
 }
 
-.form-label {
+/* =========================================
+   CAMPOS DO FORMULÁRIO
+========================================= */
+
+.login-card .form-label {
+    display: block;
     margin-bottom: 7px;
+    color: var(--ink);
     font-size: .86rem;
     font-weight: 600;
 }
 
-.input-group-text {
+.login-card .input-group-text {
     color: #89948d;
-    background: white;
-    border-color: #d9dfdb;
+    background: #ffffff;
+    border-color: var(--border);
     border-right: 0;
     border-radius: 10px 0 0 10px;
 }
 
-.form-control,
-.form-select {
+.login-card .form-control,
+.login-card .form-select {
     min-height: 48px;
-    border-color: #d9dfdb;
+    border-color: var(--border);
+    font-family: inherit;
     font-size: .9rem;
 }
 
-.input-group .form-control {
+.login-card .input-group .form-control {
     border-left: 0;
     border-radius: 0 10px 10px 0;
 }
 
-.input-group:focus-within .input-group-text,
-.input-group:focus-within .form-control {
+.login-card .input-group:focus-within .input-group-text,
+.login-card .input-group:focus-within .form-control {
     border-color: #60937b;
     box-shadow: 0 0 0 .2rem rgba(49, 95, 78, .12);
 }
 
-.input-group:focus-within .input-group-text {
+.login-card .input-group:focus-within .input-group-text {
     border-right: 0;
 }
 
-.form-control::placeholder {
+.login-card .form-control::placeholder {
     color: #a6aea9;
 }
 
@@ -179,13 +234,24 @@ body {
     fill: currentColor;
 }
 
+/* =========================================
+   MOSTRAR / OCULTAR SENHA
+========================================= */
+
 .password-toggle {
-    border: 1px solid #d9dfdb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 13px;
+
+    border: 1px solid var(--border);
     border-left: 0;
     border-radius: 0 10px 10px 0;
-    background: #fff;
+
+    background: #ffffff;
     color: #8a958e;
-    padding: 0 13px;
+    cursor: pointer;
 }
 
 .password-toggle:hover {
@@ -196,45 +262,72 @@ body {
     border-radius: 0;
 }
 
-.form-check-input:checked {
+/* =========================================
+   CHECKBOX E LINKS
+========================================= */
+
+.login-card .form-check-input:checked {
     border-color: var(--green);
     background-color: var(--green);
 }
 
-.form-check-label {
+.login-card .form-check-label {
     color: #59665e;
     font-size: .82rem;
 }
 
 .forgot-link {
+    padding: 0;
+    border: 0;
+
+    background: transparent;
     color: #39785b;
-    text-decoration: none;
+
+    font-family: inherit;
     font-size: .82rem;
     font-weight: 500;
+
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .forgot-link:hover {
+    color: var(--green-dark);
     text-decoration: underline;
 }
 
+/* =========================================
+   BOTÃO DE LOGIN
+========================================= */
+
 .btn-login {
     min-height: 49px;
+
     border: 0;
     border-radius: 10px;
+
     background: var(--green);
+
+    font-family: inherit;
     font-weight: 600;
-    letter-spacing: .1px;
+    letter-spacing: 1px;
 }
 
 .btn-login:hover,
-.btn-login:focus {
-    background: var(--green-dark);
+.btn-login:focus,
+.btn-login:active {
+    background: var(--green-dark) !important;
 }
+
+/* =========================================
+   CADASTRO E AVISOS
+========================================= */
 
 .access-select {
     max-width: 210px;
     min-height: 42px;
     margin: 12px auto 0;
+
     border-radius: 10px;
     color: #526259;
     font-size: .86rem;
@@ -242,15 +335,16 @@ body {
 
 .register-prompt {
     margin-top: 18px;
-    text-align: center;
     color: var(--muted);
+    text-align: center;
     font-size: .84rem;
 }
 
 .register-link {
     padding: 0;
     border: 0;
-    background: none;
+    background: transparent;
+
     color: #39785b;
     font: inherit;
     font-weight: 600;
@@ -258,13 +352,16 @@ body {
 }
 
 .register-link:hover {
+    color: var(--green-dark);
     text-decoration: underline;
 }
 
 .security-note {
     margin-top: 26px;
     padding-top: 17px;
+
     border-top: 1px solid #e3e8e4;
+
     color: #89938d;
     font-size: .75rem;
     line-height: 1.45;
@@ -285,65 +382,9 @@ body {
     font-size: .85rem;
 }
 
-@media (max-width: 760px) {
-    .login-shell {
-        grid-template-columns: 1fr;
-    }
-
-    .brand-panel {
-        min-height: 250px;
-        padding: 2.2rem 1.5rem;
-    }
-
-    .brand-mark {
-        width: 58px;
-        height: 58px;
-        margin-bottom: 8px;
-    }
-
-    .brand-name {
-        font-size: 3rem;
-    }
-
-    .brand-tagline {
-        font-size: 1rem;
-    }
-
-    .brand-divider,
-    .brand-motto {
-        display: none;
-    }
-
-    .form-panel {
-        padding: 1.5rem 1rem 2rem;
-    }
-
-    .login-card {
-        padding: 1.8rem 1.4rem;
-    }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .login-card {
-        animation: arrive .45s ease-out both;
-    }
-
-    @keyframes arrive {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-}
-
-/* =====================================
+/* =========================================
    MODAL DE RECUPERAÇÃO DE SENHA
-===================================== */
+========================================= */
 
 .recovery-overlay {
     position: fixed;
@@ -384,7 +425,7 @@ body {
     border: 1px solid #edf0ed;
     border-radius: 22px;
 
-    background: #fff;
+    background: #ffffff;
     box-shadow: 0 20px 60px rgba(0, 0, 0, .2);
 
     transform: translateY(15px) scale(.98);
@@ -418,7 +459,7 @@ body {
 
 .recovery-close:hover {
     background: #e4eee8;
-    color: #315f4e;
+    color: var(--green);
 }
 
 .recovery-icon {
@@ -432,7 +473,7 @@ body {
 
     border-radius: 16px;
     background: #edf6f0;
-    color: #315f4e;
+    color: var(--green);
 }
 
 .recovery-icon svg {
@@ -442,9 +483,8 @@ body {
 
 .recovery-heading {
     margin: 0;
+    color: var(--ink);
     text-align: center;
-
-    color: #26342e;
     font-size: 1.55rem;
     font-weight: 700;
     letter-spacing: -.4px;
@@ -454,22 +494,22 @@ body {
     max-width: 340px;
     margin: 10px auto 25px;
 
+    color: var(--muted);
     text-align: center;
-    color: #738078;
 
     font-size: .9rem;
     line-height: 1.5;
 }
 
 .recovery-card .form-label {
-    color: #26342e;
+    color: var(--ink);
     font-size: .86rem;
     font-weight: 600;
 }
 
 .recovery-card .form-control {
     min-height: 48px;
-    border-color: #d9dfdb;
+    border-color: var(--border);
     border-radius: 10px;
     font-size: .9rem;
 }
@@ -484,13 +524,13 @@ body {
     border: 0;
     border-radius: 10px;
 
-    background: #315f4e;
+    background: var(--green);
     font-weight: 600;
 }
 
 .recovery-submit:hover,
 .recovery-submit:focus {
-    background: #285442;
+    background: var(--green-dark);
 }
 
 .recovery-cancel {
@@ -544,6 +584,76 @@ body.recovery-open {
     overflow: hidden;
 }
 
+/* =========================================
+   ANIMAÇÕES
+========================================= */
+
+@keyframes arrive {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (max-width: 900px) {
+    .login-shell {
+        grid-template-columns: minmax(300px, .85fr) minmax(400px, 1.15fr);
+    }
+
+    .form-panel {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 760px) {
+    .login-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .brand-panel {
+        min-height: 250px;
+        padding: 2.2rem 1.5rem;
+    }
+
+    .brand-mark {
+        width: 58px;
+        height: 58px;
+        margin-bottom: 8px;
+    }
+
+    .brand-name {
+        font-size: 3rem;
+    }
+
+    .brand-tagline {
+        font-size: 1rem;
+    }
+
+    .brand-divider,
+    .brand-motto {
+        display: none;
+    }
+
+    .form-panel {
+        min-height: auto;
+        padding: 1.5rem 1rem 2rem;
+    }
+
+    .login-card {
+        width: min(100%, 465px);
+        padding: 1.8rem 1.4rem;
+    }
+}
+
 @media (max-width: 480px) {
     .recovery-card {
         padding: 2rem 1.4rem;
@@ -555,16 +665,17 @@ body.recovery-open {
     }
 }
 
+/* =========================================
+   ACESSIBILIDADE
+========================================= */
+
 @media (prefers-reduced-motion: reduce) {
+    .login-card {
+        animation: none;
+    }
+
     .recovery-overlay,
     .recovery-card {
         transition: none;
     }
-}
-.forgot-link {
-    border: none;
-    padding: 0;
-    background: transparent;
-    font-family: inherit;
-    cursor: pointer;
 }
